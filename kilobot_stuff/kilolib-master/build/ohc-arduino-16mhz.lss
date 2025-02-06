@@ -1,0 +1,1050 @@
+
+build/ohc-arduino-16mhz.elf:     file format elf32-avr
+
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 34 00 	jmp	0x68	; 0x68 <__ctors_end>
+   4:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   8:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+   c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  10:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  14:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  18:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  1c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  20:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  24:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  28:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  2c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  30:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  34:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  38:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  3c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  40:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  44:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  48:	0c 94 48 00 	jmp	0x90	; 0x90 <__vector_18>
+  4c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  50:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  54:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  58:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  5c:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  60:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+  64:	0c 94 46 00 	jmp	0x8c	; 0x8c <__bad_interrupt>
+
+00000068 <__ctors_end>:
+  68:	11 24       	eor	r1, r1
+  6a:	1f be       	out	0x3f, r1	; 63
+  6c:	cf ef       	ldi	r28, 0xFF	; 255
+  6e:	d8 e0       	ldi	r29, 0x08	; 8
+  70:	de bf       	out	0x3e, r29	; 62
+  72:	cd bf       	out	0x3d, r28	; 61
+
+00000074 <__do_clear_bss>:
+  74:	22 e0       	ldi	r18, 0x02	; 2
+  76:	a0 e0       	ldi	r26, 0x00	; 0
+  78:	b1 e0       	ldi	r27, 0x01	; 1
+  7a:	01 c0       	rjmp	.+2      	; 0x7e <.do_clear_bss_start>
+
+0000007c <.do_clear_bss_loop>:
+  7c:	1d 92       	st	X+, r1
+
+0000007e <.do_clear_bss_start>:
+  7e:	a0 32       	cpi	r26, 0x20	; 32
+  80:	b2 07       	cpc	r27, r18
+  82:	e1 f7       	brne	.-8      	; 0x7c <.do_clear_bss_loop>
+  84:	0e 94 54 01 	call	0x2a8	; 0x2a8 <main>
+  88:	0c 94 de 02 	jmp	0x5bc	; 0x5bc <_exit>
+
+0000008c <__bad_interrupt>:
+  8c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000090 <__vector_18>:
+    }
+
+    return 0;
+}
+
+ISR(USART_RX_vect) {
+  90:	1f 92       	push	r1
+  92:	0f 92       	push	r0
+  94:	0f b6       	in	r0, 0x3f	; 63
+  96:	0f 92       	push	r0
+  98:	11 24       	eor	r1, r1
+  9a:	2f 93       	push	r18
+  9c:	3f 93       	push	r19
+  9e:	4f 93       	push	r20
+  a0:	5f 93       	push	r21
+  a2:	6f 93       	push	r22
+  a4:	8f 93       	push	r24
+  a6:	9f 93       	push	r25
+  a8:	af 93       	push	r26
+  aa:	bf 93       	push	r27
+  ac:	ef 93       	push	r30
+  ae:	ff 93       	push	r31
+    uint8_t rx = UDR0;
+  b0:	30 91 c6 00 	lds	r19, 0x00C6
+
+    packet_checksum ^= packet_buffer[packet_head];
+  b4:	80 91 04 01 	lds	r24, 0x0104
+  b8:	e8 2f       	mov	r30, r24
+  ba:	f0 e0       	ldi	r31, 0x00	; 0
+  bc:	eb 5f       	subi	r30, 0xFB	; 251
+  be:	fe 4f       	sbci	r31, 0xFE	; 254
+  c0:	20 81       	ld	r18, Z
+  c2:	90 91 03 01 	lds	r25, 0x0103
+  c6:	93 27       	eor	r25, r19
+    packet_buffer[packet_head] = rx;
+  c8:	30 83       	st	Z, r19
+    packet_checksum ^= rx;
+  ca:	92 27       	eor	r25, r18
+  cc:	90 93 03 01 	sts	0x0103, r25
+    packet_head++;
+  d0:	8f 5f       	subi	r24, 0xFF	; 255
+    if (packet_head >= PACKET_SIZE)
+  d2:	84 38       	cpi	r24, 0x84	; 132
+  d4:	18 f4       	brcc	.+6      	; 0xdc <__vector_18+0x4c>
+    uint8_t rx = UDR0;
+
+    packet_checksum ^= packet_buffer[packet_head];
+    packet_buffer[packet_head] = rx;
+    packet_checksum ^= rx;
+    packet_head++;
+  d6:	80 93 04 01 	sts	0x0104, r24
+  da:	02 c0       	rjmp	.+4      	; 0xe0 <__vector_18+0x50>
+    if (packet_head >= PACKET_SIZE)
+        packet_head = 0;
+  dc:	10 92 04 01 	sts	0x0104, r1
+
+    if (packet_buffer[packet_head] == PACKET_HEADER) {
+  e0:	20 91 04 01 	lds	r18, 0x0104
+  e4:	30 e0       	ldi	r19, 0x00	; 0
+  e6:	f9 01       	movw	r30, r18
+  e8:	eb 5f       	subi	r30, 0xFB	; 251
+  ea:	fe 4f       	sbci	r31, 0xFE	; 254
+  ec:	80 81       	ld	r24, Z
+  ee:	85 35       	cpi	r24, 0x55	; 85
+  f0:	69 f5       	brne	.+90     	; 0x14c <__vector_18+0xbc>
+        if (packet_checksum == 0) {
+  f2:	91 11       	cpse	r25, r1
+  f4:	2b c0       	rjmp	.+86     	; 0x14c <__vector_18+0xbc>
+            uint16_t i;
+            uint16_t num = PACKET_SIZE-packet_head;
+  f6:	44 e8       	ldi	r20, 0x84	; 132
+  f8:	50 e0       	ldi	r21, 0x00	; 0
+  fa:	42 1b       	sub	r20, r18
+  fc:	53 0b       	sbc	r21, r19
+  fe:	a8 e9       	ldi	r26, 0x98	; 152
+ 100:	b1 e0       	ldi	r27, 0x01	; 1
+            for (i = 0; i < num; i++)
+ 102:	80 e0       	ldi	r24, 0x00	; 0
+ 104:	90 e0       	ldi	r25, 0x00	; 0
+ 106:	84 17       	cp	r24, r20
+ 108:	95 07       	cpc	r25, r21
+ 10a:	49 f0       	breq	.+18     	; 0x11e <__vector_18+0x8e>
+ 10c:	fc 01       	movw	r30, r24
+ 10e:	e2 0f       	add	r30, r18
+ 110:	f3 1f       	adc	r31, r19
+ 112:	eb 5f       	subi	r30, 0xFB	; 251
+ 114:	fe 4f       	sbci	r31, 0xFE	; 254
+                new_packet[i] = packet_buffer[i+packet_head];
+ 116:	60 81       	ld	r22, Z
+ 118:	6d 93       	st	X+, r22
+
+    if (packet_buffer[packet_head] == PACKET_HEADER) {
+        if (packet_checksum == 0) {
+            uint16_t i;
+            uint16_t num = PACKET_SIZE-packet_head;
+            for (i = 0; i < num; i++)
+ 11a:	01 96       	adiw	r24, 0x01	; 1
+ 11c:	f4 cf       	rjmp	.-24     	; 0x106 <__vector_18+0x76>
+ 11e:	dc 01       	movw	r26, r24
+ 120:	a8 56       	subi	r26, 0x68	; 104
+ 122:	be 4f       	sbci	r27, 0xFE	; 254
+ 124:	e5 e0       	ldi	r30, 0x05	; 5
+ 126:	f1 e0       	ldi	r31, 0x01	; 1
+ 128:	85 50       	subi	r24, 0x05	; 5
+ 12a:	91 40       	sbci	r25, 0x01	; 1
+ 12c:	9c 01       	movw	r18, r24
+ 12e:	2e 0f       	add	r18, r30
+ 130:	3f 1f       	adc	r19, r31
+                new_packet[i] = packet_buffer[i+packet_head];
+            for (i = num; i < PACKET_SIZE; i++)
+ 132:	24 38       	cpi	r18, 0x84	; 132
+ 134:	31 05       	cpc	r19, r1
+ 136:	18 f4       	brcc	.+6      	; 0x13e <__vector_18+0xae>
+                new_packet[i] = packet_buffer[i-num];
+ 138:	21 91       	ld	r18, Z+
+ 13a:	2d 93       	st	X+, r18
+ 13c:	f7 cf       	rjmp	.-18     	; 0x12c <__vector_18+0x9c>
+            has_new_packet = 1;
+ 13e:	81 e0       	ldi	r24, 0x01	; 1
+ 140:	80 93 02 01 	sts	0x0102, r24
+            packet_type = new_packet[1];
+ 144:	80 91 99 01 	lds	r24, 0x0199
+ 148:	80 93 97 01 	sts	0x0197, r24
+        }
+    }
+}
+ 14c:	ff 91       	pop	r31
+ 14e:	ef 91       	pop	r30
+ 150:	bf 91       	pop	r27
+ 152:	af 91       	pop	r26
+ 154:	9f 91       	pop	r25
+ 156:	8f 91       	pop	r24
+ 158:	6f 91       	pop	r22
+ 15a:	5f 91       	pop	r21
+ 15c:	4f 91       	pop	r20
+ 15e:	3f 91       	pop	r19
+ 160:	2f 91       	pop	r18
+ 162:	0f 90       	pop	r0
+ 164:	0f be       	out	0x3f, r0	; 63
+ 166:	0f 90       	pop	r0
+ 168:	1f 90       	pop	r1
+ 16a:	18 95       	reti
+
+0000016c <message_crc>:
+#include "message.h"
+#include <util/crc16.h>  // for optimized crc routines
+
+uint16_t message_crc(const message_t *msg) {
+ 16c:	fc 01       	movw	r30, r24
+ 16e:	9c 01       	movw	r18, r24
+ 170:	26 5f       	subi	r18, 0xF6	; 246
+ 172:	3f 4f       	sbci	r19, 0xFF	; 255
+    uint8_t i;
+    const uint8_t *rawmsg = (const uint8_t*)msg;
+    uint16_t crc = 0xFFFF;
+ 174:	8f ef       	ldi	r24, 0xFF	; 255
+ 176:	9f ef       	ldi	r25, 0xFF	; 255
+    for (i = 0; i<sizeof(message_t)-sizeof(msg->crc); i++)
+        crc = _crc_ccitt_update(crc, rawmsg[i]);
+ 178:	41 91       	ld	r20, Z+
+static __inline__ uint16_t
+_crc_ccitt_update (uint16_t __crc, uint8_t __data)
+{
+    uint16_t __ret;
+
+    __asm__ __volatile__ (
+ 17a:	84 27       	eor	r24, r20
+ 17c:	08 2e       	mov	r0, r24
+ 17e:	82 95       	swap	r24
+ 180:	80 7f       	andi	r24, 0xF0	; 240
+ 182:	80 25       	eor	r24, r0
+ 184:	09 2e       	mov	r0, r25
+ 186:	98 2f       	mov	r25, r24
+ 188:	82 95       	swap	r24
+ 18a:	8f 70       	andi	r24, 0x0F	; 15
+ 18c:	08 26       	eor	r0, r24
+ 18e:	86 95       	lsr	r24
+ 190:	98 27       	eor	r25, r24
+ 192:	89 27       	eor	r24, r25
+ 194:	88 0f       	add	r24, r24
+ 196:	88 0f       	add	r24, r24
+ 198:	88 0f       	add	r24, r24
+ 19a:	80 25       	eor	r24, r0
+
+uint16_t message_crc(const message_t *msg) {
+    uint8_t i;
+    const uint8_t *rawmsg = (const uint8_t*)msg;
+    uint16_t crc = 0xFFFF;
+    for (i = 0; i<sizeof(message_t)-sizeof(msg->crc); i++)
+ 19c:	e2 17       	cp	r30, r18
+ 19e:	f3 07       	cpc	r31, r19
+ 1a0:	59 f7       	brne	.-42     	; 0x178 <message_crc+0xc>
+        crc = _crc_ccitt_update(crc, rawmsg[i]);
+    return crc;
+}
+ 1a2:	08 95       	ret
+
+000001a4 <message_send>:
+.global message_send
+
+message_send:
+    ; save interrupt state
+    ; sreg = SREG
+    in sreg, SREG
+ 1a4:	0f b6       	in	r0, 0x3f	; 63
+#ifndef OHC
+    cli
+#endif
+    ; ddreg = IR_DDR
+    in  ddrreg,  IR_DDR
+ 1a6:	a4 b1       	in	r26, 0x04	; 4
+
+    ; IR_DDR |= tx_mask
+    lds tmpreg1, tx_mask
+ 1a8:	20 91 01 01 	lds	r18, 0x0101
+    or tmpreg1, ddrreg
+ 1ac:	2a 2b       	or	r18, r26
+    out IR_DDR, tmpreg1
+ 1ae:	24 b9       	out	0x04, r18	; 4
+
+    ldi tmpreg1, 0x01
+ 1b0:	21 e0       	ldi	r18, 0x01	; 1
+    irsend
+ 1b2:	30 91 01 01 	lds	r19, 0x0101
+ 1b6:	20 30       	cpi	r18, 0x00	; 0
+ 1b8:	29 f0       	breq	.+10     	; 0x1c4 <message_send+0x20>
+ 1ba:	00 00       	nop
+ 1bc:	25 b1       	in	r18, 0x05	; 5
+ 1be:	23 2b       	or	r18, r19
+ 1c0:	25 b9       	out	0x05, r18	; 5
+ 1c2:	04 c0       	rjmp	.+8      	; 0x1cc <message_send+0x28>
+ 1c4:	00 00       	nop
+ 1c6:	00 00       	nop
+ 1c8:	00 00       	nop
+ 1ca:	00 c0       	rjmp	.+0      	; 0x1cc <message_send+0x28>
+ 1cc:	00 00       	nop
+ 1ce:	00 00       	nop
+ 1d0:	00 00       	nop
+ 1d2:	30 95       	com	r19
+ 1d4:	25 b1       	in	r18, 0x05	; 5
+ 1d6:	23 23       	and	r18, r19
+ 1d8:	25 b9       	out	0x05, r18	; 5
+    delay_cycles (2*rx_bitcycles-irsend_cycles)
+ 1da:	2e ea       	ldi	r18, 0xAE	; 174
+ 1dc:	2a 95       	dec	r18
+ 1de:	f1 f7       	brne	.-4      	; 0x1dc <message_send+0x38>
+
+    ldi tmpreg1, rx_bitcycles*7/8
+ 1e0:	2b ee       	ldi	r18, 0xEB	; 235
+
+000001e2 <checkcollision>:
+checkcollision:
+    ; if (ACSR&(1<<ACO)) == 0 goto nocollision
+    in tmpreg2, ACSR
+ 1e2:	30 b7       	in	r19, 0x30	; 48
+    sbrs tmpreg2, ACO
+ 1e4:	35 ff       	sbrs	r19, 5
+    rjmp nocollision
+ 1e6:	0a c0       	rjmp	.+20     	; 0x1fc <nocollision>
+    ; IR_DDR = ddrreg
+    out IR_DDR, ddrreg
+ 1e8:	a4 b9       	out	0x04, r26	; 4
+    ; IR_PORT &= ~(tx_mask)
+    lds tmpreg2, tx_mask
+ 1ea:	30 91 01 01 	lds	r19, 0x0101
+    com tmpreg2
+ 1ee:	30 95       	com	r19
+    in tmpreg1, IR_PORT
+ 1f0:	25 b1       	in	r18, 0x05	; 5
+    and tmpreg1, tmpreg2
+ 1f2:	23 23       	and	r18, r19
+    out IR_PORT, tmpreg1
+ 1f4:	25 b9       	out	0x05, r18	; 5
+    ; restore interrupt state
+    ; SREG = sreg
+    out SREG, sreg
+ 1f6:	0f be       	out	0x3f, r0	; 63
+    return 0
+ 1f8:	80 e0       	ldi	r24, 0x00	; 0
+ 1fa:	08 95       	ret
+
+000001fc <nocollision>:
+nocollision:
+    nop
+ 1fc:	00 00       	nop
+    dec tmpreg1
+ 1fe:	2a 95       	dec	r18
+    brne checkcollision
+ 200:	81 f7       	brne	.-32     	; 0x1e2 <checkcollision>
+
+    ldi tmpreg1, 0x01
+ 202:	21 e0       	ldi	r18, 0x01	; 1
+    irsend
+ 204:	30 91 01 01 	lds	r19, 0x0101
+ 208:	20 30       	cpi	r18, 0x00	; 0
+ 20a:	29 f0       	breq	.+10     	; 0x216 <nocollision+0x1a>
+ 20c:	00 00       	nop
+ 20e:	25 b1       	in	r18, 0x05	; 5
+ 210:	23 2b       	or	r18, r19
+ 212:	25 b9       	out	0x05, r18	; 5
+ 214:	04 c0       	rjmp	.+8      	; 0x21e <nocollision+0x22>
+ 216:	00 00       	nop
+ 218:	00 00       	nop
+ 21a:	00 00       	nop
+ 21c:	00 c0       	rjmp	.+0      	; 0x21e <nocollision+0x22>
+ 21e:	00 00       	nop
+ 220:	00 00       	nop
+ 222:	00 00       	nop
+ 224:	30 95       	com	r19
+ 226:	25 b1       	in	r18, 0x05	; 5
+ 228:	23 23       	and	r18, r19
+ 22a:	25 b9       	out	0x05, r18	; 5
+    delay_cycles (rx_bitcycles-irsend_cycles)
+ 22c:	00 00       	nop
+ 22e:	24 e5       	ldi	r18, 0x54	; 84
+ 230:	2a 95       	dec	r18
+ 232:	f1 f7       	brne	.-4      	; 0x230 <nocollision+0x34>
+
+    movw r30, r24     ; // copy msg pointer in r24:r25 to r30:r31
+ 234:	fc 01       	movw	r30, r24
+    ldi byteidx, 12
+ 236:	8c e0       	ldi	r24, 0x0C	; 12
+
+00000238 <sendbyte>:
+
+sendbyte:
+    ; byteval = msg[i++]<<1 | (1<<0) | (1<<9)
+    ld bytevalL, Z+
+ 238:	61 91       	ld	r22, Z+
+    ldi bytevalH, 0x00
+ 23a:	70 e0       	ldi	r23, 0x00	; 0
+    add bytevalL, bytevalL
+ 23c:	66 0f       	add	r22, r22
+    adc bytevalH, bytevalH
+ 23e:	77 1f       	adc	r23, r23
+    ori bytevalL, 0x01
+ 240:	61 60       	ori	r22, 0x01	; 1
+    ori bytevalH, 0x02
+ 242:	72 60       	ori	r23, 0x02	; 2
+    ; bitidex = 10
+    ldi bitidx, 10
+ 244:	9a e0       	ldi	r25, 0x0A	; 10
+    ; bitmask = 0x00001
+    ldi bitmaskL, 0x01
+ 246:	41 e0       	ldi	r20, 0x01	; 1
+    ldi bitmaskH, 0x00
+ 248:	50 e0       	ldi	r21, 0x00	; 0
+
+0000024a <sendbit>:
+
+    ; 9 cycles per iteration + irsend
+sendbit:
+    ; tmpreg = (byteval&bytemask)
+    movw tmpreg1, bitmaskL
+ 24a:	9a 01       	movw	r18, r20
+    and tmpreg1, bytevalL
+ 24c:	26 23       	and	r18, r22
+    and tmpreg2, bytevalH
+ 24e:	37 23       	and	r19, r23
+    or  tmpreg1, tmpreg2
+ 250:	23 2b       	or	r18, r19
+
+    ; irsend tmpreg
+    irsend
+ 252:	30 91 01 01 	lds	r19, 0x0101
+ 256:	20 30       	cpi	r18, 0x00	; 0
+ 258:	29 f0       	breq	.+10     	; 0x264 <sendbit+0x1a>
+ 25a:	00 00       	nop
+ 25c:	25 b1       	in	r18, 0x05	; 5
+ 25e:	23 2b       	or	r18, r19
+ 260:	25 b9       	out	0x05, r18	; 5
+ 262:	04 c0       	rjmp	.+8      	; 0x26c <sendbit+0x22>
+ 264:	00 00       	nop
+ 266:	00 00       	nop
+ 268:	00 00       	nop
+ 26a:	00 c0       	rjmp	.+0      	; 0x26c <sendbit+0x22>
+ 26c:	00 00       	nop
+ 26e:	00 00       	nop
+ 270:	00 00       	nop
+ 272:	30 95       	com	r19
+ 274:	25 b1       	in	r18, 0x05	; 5
+ 276:	23 23       	and	r18, r19
+ 278:	25 b9       	out	0x05, r18	; 5
+    delay_cycles (rx_bitcycles-irsend_cycles-9)
+ 27a:	00 00       	nop
+ 27c:	21 e5       	ldi	r18, 0x51	; 81
+ 27e:	2a 95       	dec	r18
+ 280:	f1 f7       	brne	.-4      	; 0x27e <sendbit+0x34>
+
+    ; bitmask <<= 1
+    add bitmaskL, bitmaskL
+ 282:	44 0f       	add	r20, r20
+    adc bitmaskH, bitmaskH
+ 284:	55 1f       	adc	r21, r21
+
+    ; if (bitidex--) goto sendbit
+    dec bitidx
+ 286:	9a 95       	dec	r25
+    brne sendbit
+ 288:	01 f7       	brne	.-64     	; 0x24a <sendbit>
+
+    ; if (byteidx--) goto sendbyte
+    dec byteidx
+ 28a:	8a 95       	dec	r24
+    brne sendbyte
+ 28c:	a9 f6       	brne	.-86     	; 0x238 <sendbyte>
+
+    ; ACSR |= (1<<ACI)
+    in tmpreg1, ACSR
+ 28e:	20 b7       	in	r18, 0x30	; 48
+    ori tmpreg1, (1<<ACI)
+ 290:	20 61       	ori	r18, 0x10	; 16
+    out ACSR, tmpreg1
+ 292:	20 bf       	out	0x30, r18	; 48
+    ; IR_DDR = ddrreg
+    out IR_DDR, ddrreg
+ 294:	a4 b9       	out	0x04, r26	; 4
+
+    ; IR_PORT &= ~(tx_mask)
+    lds tmpreg2, tx_mask
+ 296:	30 91 01 01 	lds	r19, 0x0101
+    com tmpreg2
+ 29a:	30 95       	com	r19
+    in tmpreg1, IR_PORT
+ 29c:	25 b1       	in	r18, 0x05	; 5
+    and tmpreg1, tmpreg2
+ 29e:	23 23       	and	r18, r19
+    out IR_PORT, tmpreg1
+ 2a0:	25 b9       	out	0x05, r18	; 5
+
+    ; restore interrupt state
+    ; SREG = sreg
+    out SREG, sreg
+ 2a2:	0f be       	out	0x3f, r0	; 63
+    return 1
+ 2a4:	81 e0       	ldi	r24, 0x01	; 1
+ 2a6:	08 95       	ret
+
+000002a8 <main>:
+#define led_ddr DDRB
+#define led_mask (1<<1)
+#endif
+
+int main() {
+    cli();
+ 2a8:	f8 94       	cli
+    // Set port outputs
+    ir_ddr |= ir_mask;
+ 2aa:	21 9a       	sbi	0x04, 1	; 4
+    led_ddr |= led_mask;
+ 2ac:	25 9a       	sbi	0x04, 5	; 4
+    // Turn off all leds
+    led_port &= ~led_mask;
+ 2ae:	2d 98       	cbi	0x05, 5	; 5
+    ir_port &= ~ir_mask;
+ 2b0:	29 98       	cbi	0x05, 1	; 5
+    // turn off analog comparator (to avoid detecting collisions)
+    ACSR |= (1<<ACD);
+ 2b2:	80 b7       	in	r24, 0x30	; 48
+ 2b4:	80 68       	ori	r24, 0x80	; 128
+ 2b6:	80 bf       	out	0x30, r24	; 48
+    //move interrupt vectors to bootloader interupts
+    MCUCR = (1<<IVCE);
+    MCUCR = (1<<IVSEL);
+#endif
+#ifdef ARDUINO_16MHZ
+    CLKPR = (1<<CLKPCE);
+ 2b8:	80 e8       	ldi	r24, 0x80	; 128
+ 2ba:	80 93 61 00 	sts	0x0061, r24
+    CLKPR = 1;
+ 2be:	81 e0       	ldi	r24, 0x01	; 1
+ 2c0:	80 93 61 00 	sts	0x0061, r24
+#endif
+
+#define BAUD 38400
+#include <util/setbaud.h>
+    UBRR0 = UBRR_VALUE;
+ 2c4:	8c e0       	ldi	r24, 0x0C	; 12
+ 2c6:	90 e0       	ldi	r25, 0x00	; 0
+ 2c8:	90 93 c5 00 	sts	0x00C5, r25
+ 2cc:	80 93 c4 00 	sts	0x00C4, r24
+#if USE_2X
+    UCSR0A |= (1<<U2X0);
+#else
+    UCSR0A &= ~(1<<U2X0);
+ 2d0:	80 91 c0 00 	lds	r24, 0x00C0
+ 2d4:	8d 7f       	andi	r24, 0xFD	; 253
+ 2d6:	80 93 c0 00 	sts	0x00C0, r24
+#endif
+    UCSR0C |= (1<<UCSZ01)|(1<<UCSZ00);              // No parity, 8 bits comm, 1 stop bit
+ 2da:	80 91 c2 00 	lds	r24, 0x00C2
+ 2de:	86 60       	ori	r24, 0x06	; 6
+ 2e0:	80 93 c2 00 	sts	0x00C2, r24
+    UCSR0B |= (1<<RXCIE0)|(1<<RXEN0)|(1<<TXEN0);    // Enable reception, transmission, and reception interrupts
+ 2e4:	80 91 c1 00 	lds	r24, 0x00C1
+ 2e8:	88 69       	ori	r24, 0x98	; 152
+ 2ea:	80 93 c1 00 	sts	0x00C1, r24
+    sei();
+ 2ee:	78 94       	sei
+
+    tx_mask = ir_mask;
+ 2f0:	82 e0       	ldi	r24, 0x02	; 2
+ 2f2:	80 93 01 01 	sts	0x0101, r24
+    bootmsg = (bootmsg_t*)msg.data;
+ 2f6:	8b e8       	ldi	r24, 0x8B	; 139
+ 2f8:	91 e0       	ldi	r25, 0x01	; 1
+ 2fa:	90 93 8a 01 	sts	0x018A, r25
+ 2fe:	80 93 89 01 	sts	0x0189, r24
+    gpsmsg = (gpsmsg_t*)msg.data;
+ 302:	90 93 1f 02 	sts	0x021F, r25
+ 306:	80 93 1e 02 	sts	0x021E, r24
+    rawmsg = (uint8_t*)&msg;
+ 30a:	90 93 1d 02 	sts	0x021D, r25
+ 30e:	80 93 1c 02 	sts	0x021C, r24
+ 312:	85 e0       	ldi	r24, 0x05	; 5
+
+    // Use LEDs to flash power on indicator signal.
+    uint8_t i;
+    for (i=0; i<5; i++) {
+        led_port |= led_mask;
+ 314:	2d 9a       	sbi	0x05, 5	; 5
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 316:	2f ef       	ldi	r18, 0xFF	; 255
+ 318:	31 ee       	ldi	r19, 0xE1	; 225
+ 31a:	94 e0       	ldi	r25, 0x04	; 4
+ 31c:	21 50       	subi	r18, 0x01	; 1
+ 31e:	30 40       	sbci	r19, 0x00	; 0
+ 320:	90 40       	sbci	r25, 0x00	; 0
+ 322:	e1 f7       	brne	.-8      	; 0x31c <main+0x74>
+ 324:	00 c0       	rjmp	.+0      	; 0x326 <main+0x7e>
+ 326:	00 00       	nop
+        _delay_ms(200);
+        led_port &= ~led_mask;
+ 328:	2d 98       	cbi	0x05, 5	; 5
+ 32a:	af ef       	ldi	r26, 0xFF	; 255
+ 32c:	b1 ee       	ldi	r27, 0xE1	; 225
+ 32e:	24 e0       	ldi	r18, 0x04	; 4
+ 330:	a1 50       	subi	r26, 0x01	; 1
+ 332:	b0 40       	sbci	r27, 0x00	; 0
+ 334:	20 40       	sbci	r18, 0x00	; 0
+ 336:	e1 f7       	brne	.-8      	; 0x330 <main+0x88>
+ 338:	00 c0       	rjmp	.+0      	; 0x33a <main+0x92>
+ 33a:	00 00       	nop
+ 33c:	81 50       	subi	r24, 0x01	; 1
+    gpsmsg = (gpsmsg_t*)msg.data;
+    rawmsg = (uint8_t*)&msg;
+
+    // Use LEDs to flash power on indicator signal.
+    uint8_t i;
+    for (i=0; i<5; i++) {
+ 33e:	51 f7       	brne	.-44     	; 0x314 <main+0x6c>
+                led_port &= ~led_mask;
+                _delay_ms(10);
+                break;
+#define GPS_MSGSIZE 8
+            case PACKET_GPSFRAME:
+                memset(&msg, 0, sizeof(message_t)-sizeof(msg.crc));
+ 340:	ca e0       	ldi	r28, 0x0A	; 10
+                msg.type = GPS;
+ 342:	d1 e0       	ldi	r29, 0x01	; 1
+                cli();
+                for (i = 2; i<PACKET_SIZE-GPS_MSGSIZE; i += GPS_MSGSIZE) {
+                    memcpy(gpsmsg, new_packet+i, GPS_MSGSIZE);
+ 344:	18 e0       	ldi	r17, 0x08	; 8
+                    led_port &= ~led_mask;
+                    _delay_ms(3);
+                }
+                break;
+            case PACKET_BOOTPAGE:
+                msg.type = BOOTPGM_PAGE;
+ 346:	01 e8       	ldi	r16, 0x81	; 129
+                bootmsg->page_address = new_packet[2];
+                bootmsg->unused = 0;
+                cli();
+                for (i = 0; i<SPM_PAGESIZE && !has_new_packet; i+=6) {
+                    bootmsg->page_offset = i/2;
+                    memcpy(&(bootmsg->word1), new_packet+3+i, 6);
+ 348:	86 e0       	ldi	r24, 0x06	; 6
+ 34a:	f8 2e       	mov	r15, r24
+        led_port &= ~led_mask;
+        _delay_ms(200);
+    }
+
+    while(1) {
+        if (has_new_packet) {
+ 34c:	80 91 02 01 	lds	r24, 0x0102
+ 350:	88 23       	and	r24, r24
+ 352:	e1 f3       	breq	.-8      	; 0x34c <main+0xa4>
+            has_new_packet = 0;
+ 354:	10 92 02 01 	sts	0x0102, r1
+            switch(packet_type) {
+ 358:	80 91 97 01 	lds	r24, 0x0197
+ 35c:	83 30       	cpi	r24, 0x03	; 3
+ 35e:	09 f4       	brne	.+2      	; 0x362 <main+0xba>
+ 360:	75 c0       	rjmp	.+234    	; 0x44c <main+0x1a4>
+ 362:	38 f4       	brcc	.+14     	; 0x372 <main+0xca>
+ 364:	81 30       	cpi	r24, 0x01	; 1
+ 366:	79 f0       	breq	.+30     	; 0x386 <main+0xde>
+ 368:	82 30       	cpi	r24, 0x02	; 2
+ 36a:	81 f7       	brne	.-32     	; 0x34c <main+0xa4>
+ 36c:	80 e0       	ldi	r24, 0x00	; 0
+ 36e:	90 e0       	ldi	r25, 0x00	; 0
+ 370:	17 c0       	rjmp	.+46     	; 0x3a0 <main+0xf8>
+ 372:	85 30       	cpi	r24, 0x05	; 5
+ 374:	09 f4       	brne	.+2      	; 0x378 <main+0xd0>
+ 376:	ca c0       	rjmp	.+404    	; 0x50c <main+0x264>
+ 378:	08 f4       	brcc	.+2      	; 0x37c <main+0xd4>
+ 37a:	90 c0       	rjmp	.+288    	; 0x49c <main+0x1f4>
+ 37c:	86 30       	cpi	r24, 0x06	; 6
+ 37e:	31 f7       	brne	.-52     	; 0x34c <main+0xa4>
+ 380:	80 e0       	ldi	r24, 0x00	; 0
+ 382:	90 e0       	ldi	r25, 0x00	; 0
+ 384:	3b c0       	rjmp	.+118    	; 0x3fc <main+0x154>
+            case PACKET_STOP:
+                break;
+            case PACKET_LEDTOGGLE:
+                leds_toggle = !leds_toggle;
+ 386:	81 e0       	ldi	r24, 0x01	; 1
+ 388:	90 91 00 01 	lds	r25, 0x0100
+ 38c:	91 11       	cpse	r25, r1
+ 38e:	80 e0       	ldi	r24, 0x00	; 0
+ 390:	80 93 00 01 	sts	0x0100, r24
+                if (leds_toggle) {
+ 394:	88 23       	and	r24, r24
+ 396:	11 f0       	breq	.+4      	; 0x39c <main+0xf4>
+                    led_port |= led_mask;
+ 398:	2d 9a       	sbi	0x05, 5	; 5
+ 39a:	d8 cf       	rjmp	.-80     	; 0x34c <main+0xa4>
+                } else {
+                    led_port &= ~led_mask;
+ 39c:	2d 98       	cbi	0x05, 5	; 5
+ 39e:	d6 cf       	rjmp	.-84     	; 0x34c <main+0xa4>
+ 3a0:	fc 01       	movw	r30, r24
+ 3a2:	e8 56       	subi	r30, 0x68	; 104
+ 3a4:	fe 4f       	sbci	r31, 0xFE	; 254
+                }
+                break;
+            case PACKET_FORWARDMSG:
+                for (i = 0; i<sizeof(message_t)-sizeof(msg.crc); i++)
+                    rawmsg[i] = new_packet[i+2];
+ 3a6:	22 81       	ldd	r18, Z+2	; 0x02
+ 3a8:	e0 91 1c 02 	lds	r30, 0x021C
+ 3ac:	f0 91 1d 02 	lds	r31, 0x021D
+ 3b0:	e8 0f       	add	r30, r24
+ 3b2:	f9 1f       	adc	r31, r25
+ 3b4:	20 83       	st	Z, r18
+ 3b6:	01 96       	adiw	r24, 0x01	; 1
+                } else {
+                    led_port &= ~led_mask;
+                }
+                break;
+            case PACKET_FORWARDMSG:
+                for (i = 0; i<sizeof(message_t)-sizeof(msg.crc); i++)
+ 3b8:	8a 30       	cpi	r24, 0x0A	; 10
+ 3ba:	91 05       	cpc	r25, r1
+ 3bc:	89 f7       	brne	.-30     	; 0x3a0 <main+0xf8>
+                    rawmsg[i] = new_packet[i+2];
+                msg.crc = message_crc(&msg);
+ 3be:	8b e8       	ldi	r24, 0x8B	; 139
+ 3c0:	91 e0       	ldi	r25, 0x01	; 1
+ 3c2:	0e 94 b6 00 	call	0x16c	; 0x16c <message_crc>
+ 3c6:	90 93 96 01 	sts	0x0196, r25
+ 3ca:	80 93 95 01 	sts	0x0195, r24
+                while(!has_new_packet) {
+ 3ce:	80 91 02 01 	lds	r24, 0x0102
+ 3d2:	81 11       	cpse	r24, r1
+ 3d4:	bb cf       	rjmp	.-138    	; 0x34c <main+0xa4>
+                    message_send(&msg);
+ 3d6:	8b e8       	ldi	r24, 0x8B	; 139
+ 3d8:	91 e0       	ldi	r25, 0x01	; 1
+ 3da:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <message_send>
+                    led_port |= led_mask;
+ 3de:	2d 9a       	sbi	0x05, 5	; 5
+ 3e0:	8f e6       	ldi	r24, 0x6F	; 111
+ 3e2:	97 e1       	ldi	r25, 0x17	; 23
+ 3e4:	01 97       	sbiw	r24, 0x01	; 1
+ 3e6:	f1 f7       	brne	.-4      	; 0x3e4 <main+0x13c>
+ 3e8:	00 c0       	rjmp	.+0      	; 0x3ea <main+0x142>
+ 3ea:	00 00       	nop
+                    _delay_ms(3);
+                    led_port &= ~led_mask;
+ 3ec:	2d 98       	cbi	0x05, 5	; 5
+ 3ee:	af e6       	ldi	r26, 0x6F	; 111
+ 3f0:	b7 e1       	ldi	r27, 0x17	; 23
+ 3f2:	11 97       	sbiw	r26, 0x01	; 1
+ 3f4:	f1 f7       	brne	.-4      	; 0x3f2 <main+0x14a>
+ 3f6:	00 c0       	rjmp	.+0      	; 0x3f8 <main+0x150>
+ 3f8:	00 00       	nop
+ 3fa:	e9 cf       	rjmp	.-46     	; 0x3ce <main+0x126>
+ 3fc:	fc 01       	movw	r30, r24
+ 3fe:	e8 56       	subi	r30, 0x68	; 104
+ 400:	fe 4f       	sbci	r31, 0xFE	; 254
+                    _delay_ms(3);
+                }
+                break;
+            case PACKET_FORWARDMSGSINGLE:
+                for (i = 0; i<sizeof(message_t)-sizeof(msg.crc); i++)
+                    rawmsg[i] = new_packet[i+2];
+ 402:	22 81       	ldd	r18, Z+2	; 0x02
+ 404:	e0 91 1c 02 	lds	r30, 0x021C
+ 408:	f0 91 1d 02 	lds	r31, 0x021D
+ 40c:	e8 0f       	add	r30, r24
+ 40e:	f9 1f       	adc	r31, r25
+ 410:	20 83       	st	Z, r18
+ 412:	01 96       	adiw	r24, 0x01	; 1
+                    led_port &= ~led_mask;
+                    _delay_ms(3);
+                }
+                break;
+            case PACKET_FORWARDMSGSINGLE:
+                for (i = 0; i<sizeof(message_t)-sizeof(msg.crc); i++)
+ 414:	8a 30       	cpi	r24, 0x0A	; 10
+ 416:	91 05       	cpc	r25, r1
+ 418:	89 f7       	brne	.-30     	; 0x3fc <main+0x154>
+                    rawmsg[i] = new_packet[i+2];
+                msg.crc = message_crc(&msg);
+ 41a:	8b e8       	ldi	r24, 0x8B	; 139
+ 41c:	91 e0       	ldi	r25, 0x01	; 1
+ 41e:	0e 94 b6 00 	call	0x16c	; 0x16c <message_crc>
+ 422:	90 93 96 01 	sts	0x0196, r25
+ 426:	80 93 95 01 	sts	0x0195, r24
+                message_send(&msg);
+ 42a:	8b e8       	ldi	r24, 0x8B	; 139
+ 42c:	91 e0       	ldi	r25, 0x01	; 1
+ 42e:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <message_send>
+                led_port |= led_mask;
+ 432:	2d 9a       	sbi	0x05, 5	; 5
+ 434:	8f e6       	ldi	r24, 0x6F	; 111
+ 436:	97 e1       	ldi	r25, 0x17	; 23
+ 438:	01 97       	sbiw	r24, 0x01	; 1
+ 43a:	f1 f7       	brne	.-4      	; 0x438 <main+0x190>
+ 43c:	00 c0       	rjmp	.+0      	; 0x43e <main+0x196>
+ 43e:	00 00       	nop
+                _delay_ms(3);
+                led_port &= ~led_mask;
+ 440:	2d 98       	cbi	0x05, 5	; 5
+ 442:	af e6       	ldi	r26, 0x6F	; 111
+ 444:	b7 e1       	ldi	r27, 0x17	; 23
+ 446:	11 97       	sbiw	r26, 0x01	; 1
+ 448:	f1 f7       	brne	.-4      	; 0x446 <main+0x19e>
+ 44a:	9c c0       	rjmp	.+312    	; 0x584 <main+0x2dc>
+    }
+
+    while(1) {
+        if (has_new_packet) {
+            has_new_packet = 0;
+            switch(packet_type) {
+ 44c:	80 e0       	ldi	r24, 0x00	; 0
+ 44e:	90 e0       	ldi	r25, 0x00	; 0
+ 450:	fc 01       	movw	r30, r24
+ 452:	e8 56       	subi	r30, 0x68	; 104
+ 454:	fe 4f       	sbci	r31, 0xFE	; 254
+                led_port &= ~led_mask;
+                _delay_ms(3);
+                break;
+            case PACKET_FORWARDRAWMSG:
+                for (i = 0; i<sizeof(message_t); i++)
+                    rawmsg[i] = new_packet[i+2];
+ 456:	22 81       	ldd	r18, Z+2	; 0x02
+ 458:	e0 91 1c 02 	lds	r30, 0x021C
+ 45c:	f0 91 1d 02 	lds	r31, 0x021D
+ 460:	e8 0f       	add	r30, r24
+ 462:	f9 1f       	adc	r31, r25
+ 464:	20 83       	st	Z, r18
+ 466:	01 96       	adiw	r24, 0x01	; 1
+                _delay_ms(3);
+                led_port &= ~led_mask;
+                _delay_ms(3);
+                break;
+            case PACKET_FORWARDRAWMSG:
+                for (i = 0; i<sizeof(message_t); i++)
+ 468:	8c 30       	cpi	r24, 0x0C	; 12
+ 46a:	91 05       	cpc	r25, r1
+ 46c:	89 f7       	brne	.-30     	; 0x450 <main+0x1a8>
+                    rawmsg[i] = new_packet[i+2];
+                while(!has_new_packet) {
+ 46e:	80 91 02 01 	lds	r24, 0x0102
+ 472:	81 11       	cpse	r24, r1
+ 474:	6b cf       	rjmp	.-298    	; 0x34c <main+0xa4>
+                    message_send(&msg);
+ 476:	8b e8       	ldi	r24, 0x8B	; 139
+ 478:	91 e0       	ldi	r25, 0x01	; 1
+ 47a:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <message_send>
+                    led_port |= led_mask;
+ 47e:	2d 9a       	sbi	0x05, 5	; 5
+ 480:	8f e6       	ldi	r24, 0x6F	; 111
+ 482:	97 e1       	ldi	r25, 0x17	; 23
+ 484:	01 97       	sbiw	r24, 0x01	; 1
+ 486:	f1 f7       	brne	.-4      	; 0x484 <main+0x1dc>
+ 488:	00 c0       	rjmp	.+0      	; 0x48a <main+0x1e2>
+ 48a:	00 00       	nop
+                    _delay_ms(3);
+                    led_port &= ~led_mask;
+ 48c:	2d 98       	cbi	0x05, 5	; 5
+ 48e:	af e6       	ldi	r26, 0x6F	; 111
+ 490:	b7 e1       	ldi	r27, 0x17	; 23
+ 492:	11 97       	sbiw	r26, 0x01	; 1
+ 494:	f1 f7       	brne	.-4      	; 0x492 <main+0x1ea>
+ 496:	00 c0       	rjmp	.+0      	; 0x498 <main+0x1f0>
+ 498:	00 00       	nop
+ 49a:	e9 cf       	rjmp	.-46     	; 0x46e <main+0x1c6>
+                    _delay_ms(3);
+                }
+                break;
+            case PACKET_BOOTPAGE:
+                msg.type = BOOTPGM_PAGE;
+ 49c:	00 93 94 01 	sts	0x0194, r16
+                bootmsg->page_address = new_packet[2];
+ 4a0:	e0 91 89 01 	lds	r30, 0x0189
+ 4a4:	f0 91 8a 01 	lds	r31, 0x018A
+ 4a8:	80 91 9a 01 	lds	r24, 0x019A
+ 4ac:	80 83       	st	Z, r24
+                bootmsg->unused = 0;
+ 4ae:	10 86       	std	Z+8, r1	; 0x08
+                cli();
+ 4b0:	f8 94       	cli
+                for (i = 0; i<SPM_PAGESIZE && !has_new_packet; i+=6) {
+ 4b2:	e0 e0       	ldi	r30, 0x00	; 0
+ 4b4:	f0 e0       	ldi	r31, 0x00	; 0
+ 4b6:	8e 2f       	mov	r24, r30
+ 4b8:	e4 38       	cpi	r30, 0x84	; 132
+ 4ba:	f1 05       	cpc	r31, r1
+ 4bc:	09 f4       	brne	.+2      	; 0x4c0 <main+0x218>
+ 4be:	55 c0       	rjmp	.+170    	; 0x56a <main+0x2c2>
+ 4c0:	90 91 02 01 	lds	r25, 0x0102
+ 4c4:	6f 01       	movw	r12, r30
+ 4c6:	b6 e0       	ldi	r27, 0x06	; 6
+ 4c8:	cb 0e       	add	r12, r27
+ 4ca:	d1 1c       	adc	r13, r1
+ 4cc:	91 11       	cpse	r25, r1
+ 4ce:	4d c0       	rjmp	.+154    	; 0x56a <main+0x2c2>
+                    bootmsg->page_offset = i/2;
+ 4d0:	a0 91 89 01 	lds	r26, 0x0189
+ 4d4:	b0 91 8a 01 	lds	r27, 0x018A
+ 4d8:	86 95       	lsr	r24
+ 4da:	11 96       	adiw	r26, 0x01	; 1
+ 4dc:	8c 93       	st	X, r24
+ 4de:	11 97       	sbiw	r26, 0x01	; 1
+                    memcpy(&(bootmsg->word1), new_packet+3+i, 6);
+ 4e0:	12 96       	adiw	r26, 0x02	; 2
+ 4e2:	e5 56       	subi	r30, 0x65	; 101
+ 4e4:	fe 4f       	sbci	r31, 0xFE	; 254
+ 4e6:	8f 2d       	mov	r24, r15
+ 4e8:	01 90       	ld	r0, Z+
+ 4ea:	0d 92       	st	X+, r0
+ 4ec:	8a 95       	dec	r24
+ 4ee:	e1 f7       	brne	.-8      	; 0x4e8 <main+0x240>
+                    msg.crc = message_crc(&msg);
+ 4f0:	8b e8       	ldi	r24, 0x8B	; 139
+ 4f2:	91 e0       	ldi	r25, 0x01	; 1
+ 4f4:	0e 94 b6 00 	call	0x16c	; 0x16c <message_crc>
+ 4f8:	90 93 96 01 	sts	0x0196, r25
+ 4fc:	80 93 95 01 	sts	0x0195, r24
+                    message_send(&msg);
+ 500:	8b e8       	ldi	r24, 0x8B	; 139
+ 502:	91 e0       	ldi	r25, 0x01	; 1
+ 504:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <message_send>
+ 508:	f6 01       	movw	r30, r12
+ 50a:	d5 cf       	rjmp	.-86     	; 0x4b6 <main+0x20e>
+                led_port &= ~led_mask;
+                _delay_ms(10);
+                break;
+#define GPS_MSGSIZE 8
+            case PACKET_GPSFRAME:
+                memset(&msg, 0, sizeof(message_t)-sizeof(msg.crc));
+ 50c:	eb e8       	ldi	r30, 0x8B	; 139
+ 50e:	f1 e0       	ldi	r31, 0x01	; 1
+ 510:	df 01       	movw	r26, r30
+ 512:	2c 2f       	mov	r18, r28
+ 514:	1d 92       	st	X+, r1
+ 516:	2a 95       	dec	r18
+ 518:	e9 f7       	brne	.-6      	; 0x514 <main+0x26c>
+                msg.type = GPS;
+ 51a:	d0 93 94 01 	sts	0x0194, r29
+                cli();
+ 51e:	f8 94       	cli
+ 520:	c1 2c       	mov	r12, r1
+ 522:	d1 2c       	mov	r13, r1
+                for (i = 2; i<PACKET_SIZE-GPS_MSGSIZE; i += GPS_MSGSIZE) {
+                    memcpy(gpsmsg, new_packet+i, GPS_MSGSIZE);
+ 524:	a0 91 1e 02 	lds	r26, 0x021E
+ 528:	b0 91 1f 02 	lds	r27, 0x021F
+ 52c:	f6 01       	movw	r30, r12
+ 52e:	e6 56       	subi	r30, 0x66	; 102
+ 530:	fe 4f       	sbci	r31, 0xFE	; 254
+ 532:	81 2f       	mov	r24, r17
+ 534:	01 90       	ld	r0, Z+
+ 536:	0d 92       	st	X+, r0
+ 538:	8a 95       	dec	r24
+ 53a:	e1 f7       	brne	.-8      	; 0x534 <main+0x28c>
+                    if (gpsmsg->id == 0 && gpsmsg->x == 0 && gpsmsg->y == 0 && gpsmsg->theta == 0 && gpsmsg->unused == 0)
+ 53c:	e0 91 1e 02 	lds	r30, 0x021E
+ 540:	f0 91 1f 02 	lds	r31, 0x021F
+ 544:	80 81       	ld	r24, Z
+ 546:	91 81       	ldd	r25, Z+1	; 0x01
+ 548:	89 2b       	or	r24, r25
+ 54a:	f9 f4       	brne	.+62     	; 0x58a <main+0x2e2>
+ 54c:	82 81       	ldd	r24, Z+2	; 0x02
+ 54e:	93 81       	ldd	r25, Z+3	; 0x03
+ 550:	89 2b       	or	r24, r25
+ 552:	d9 f4       	brne	.+54     	; 0x58a <main+0x2e2>
+ 554:	84 81       	ldd	r24, Z+4	; 0x04
+ 556:	95 81       	ldd	r25, Z+5	; 0x05
+ 558:	89 2b       	or	r24, r25
+ 55a:	b9 f4       	brne	.+46     	; 0x58a <main+0x2e2>
+ 55c:	86 81       	ldd	r24, Z+6	; 0x06
+ 55e:	81 11       	cpse	r24, r1
+ 560:	14 c0       	rjmp	.+40     	; 0x58a <main+0x2e2>
+ 562:	87 81       	ldd	r24, Z+7	; 0x07
+ 564:	90 85       	ldd	r25, Z+8	; 0x08
+ 566:	89 2b       	or	r24, r25
+ 568:	81 f4       	brne	.+32     	; 0x58a <main+0x2e2>
+                        break;
+                    msg.crc = message_crc(&msg);
+                    message_send(&msg);
+                    _delay_us(50);
+                }
+                sei();
+ 56a:	78 94       	sei
+                led_port |= led_mask;
+ 56c:	2d 9a       	sbi	0x05, 5	; 5
+ 56e:	8f e1       	ldi	r24, 0x1F	; 31
+ 570:	9e e4       	ldi	r25, 0x4E	; 78
+ 572:	01 97       	sbiw	r24, 0x01	; 1
+ 574:	f1 f7       	brne	.-4      	; 0x572 <main+0x2ca>
+ 576:	00 c0       	rjmp	.+0      	; 0x578 <main+0x2d0>
+ 578:	00 00       	nop
+                _delay_ms(10);
+                led_port &= ~led_mask;
+ 57a:	2d 98       	cbi	0x05, 5	; 5
+ 57c:	af e1       	ldi	r26, 0x1F	; 31
+ 57e:	be e4       	ldi	r27, 0x4E	; 78
+ 580:	11 97       	sbiw	r26, 0x01	; 1
+ 582:	f1 f7       	brne	.-4      	; 0x580 <main+0x2d8>
+ 584:	00 c0       	rjmp	.+0      	; 0x586 <main+0x2de>
+ 586:	00 00       	nop
+ 588:	e1 ce       	rjmp	.-574    	; 0x34c <main+0xa4>
+                cli();
+                for (i = 2; i<PACKET_SIZE-GPS_MSGSIZE; i += GPS_MSGSIZE) {
+                    memcpy(gpsmsg, new_packet+i, GPS_MSGSIZE);
+                    if (gpsmsg->id == 0 && gpsmsg->x == 0 && gpsmsg->y == 0 && gpsmsg->theta == 0 && gpsmsg->unused == 0)
+                        break;
+                    msg.crc = message_crc(&msg);
+ 58a:	8b e8       	ldi	r24, 0x8B	; 139
+ 58c:	91 e0       	ldi	r25, 0x01	; 1
+ 58e:	0e 94 b6 00 	call	0x16c	; 0x16c <message_crc>
+ 592:	90 93 96 01 	sts	0x0196, r25
+ 596:	80 93 95 01 	sts	0x0195, r24
+                    message_send(&msg);
+ 59a:	8b e8       	ldi	r24, 0x8B	; 139
+ 59c:	91 e0       	ldi	r25, 0x01	; 1
+ 59e:	0e 94 d2 00 	call	0x1a4	; 0x1a4 <message_send>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 5a2:	b5 e8       	ldi	r27, 0x85	; 133
+ 5a4:	ba 95       	dec	r27
+ 5a6:	f1 f7       	brne	.-4      	; 0x5a4 <main+0x2fc>
+ 5a8:	00 00       	nop
+ 5aa:	28 e0       	ldi	r18, 0x08	; 8
+ 5ac:	c2 0e       	add	r12, r18
+ 5ae:	d1 1c       	adc	r13, r1
+#define GPS_MSGSIZE 8
+            case PACKET_GPSFRAME:
+                memset(&msg, 0, sizeof(message_t)-sizeof(msg.crc));
+                msg.type = GPS;
+                cli();
+                for (i = 2; i<PACKET_SIZE-GPS_MSGSIZE; i += GPS_MSGSIZE) {
+ 5b0:	30 e8       	ldi	r19, 0x80	; 128
+ 5b2:	c3 16       	cp	r12, r19
+ 5b4:	d1 04       	cpc	r13, r1
+ 5b6:	09 f0       	breq	.+2      	; 0x5ba <main+0x312>
+ 5b8:	b5 cf       	rjmp	.-150    	; 0x524 <main+0x27c>
+ 5ba:	d7 cf       	rjmp	.-82     	; 0x56a <main+0x2c2>
+
+000005bc <_exit>:
+ 5bc:	f8 94       	cli
+
+000005be <__stop_program>:
+ 5be:	ff cf       	rjmp	.-2      	; 0x5be <__stop_program>
