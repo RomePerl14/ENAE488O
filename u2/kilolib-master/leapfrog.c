@@ -85,7 +85,8 @@ uint8_t current_leap_count = 0; // indicates how many times we've leaped
 uint8_t neighbor_current_leap_count = 0; // indicates how many times our neighbor has leaped
 
 // LEAPING VARIABLES
-uint8_t kilo_leap_order[] = {1,2,3,4,5,6}; // starting configuration (does not need to be in kilo_id order, i.e could be {2,1,3,...})
+// uint8_t kilo_leap_order[] = {3,1,6,5,2,4}; // starting configuration (does not need to be in kilo_id order, i.e could be {2,1,3,...})
+uint8_t kilo_leap_order[] = {1,2,3,4}; // starting configuration (does not need to be in kilo_id order, i.e could be {2,1,3,...})
 uint8_t num_kilobots = sizeof(kilo_leap_order); // Number of kilobots in the system
 int current_leap_location = -1; // our current leap location
 
@@ -122,14 +123,16 @@ void orbit_normal() {
     } else {
         switch(current_direction)
         {
+            // Check if we're counterclockwise, and move approriately
             case COUNTER_CLOCKWISE:
-                if (orbit_distance < DESIRED_DISTANCE)
+                if (orbit_distance < DESIRED_DISTANCE) // use orbit_distance to focus on a specific kilobot
                     set_motion(RIGHT);
                 else
                     set_motion(LEFT);
                 break;
+            // check if we're clockwise, and move appropriately
             case CLOCKWISE:
-                if (orbit_distance < DESIRED_DISTANCE)
+                if (orbit_distance < DESIRED_DISTANCE) // use orbit_distance to focus on a specific kilobot
                     set_motion(LEFT);
                 else
                     set_motion(RIGHT);
@@ -141,7 +144,7 @@ void orbit_normal() {
 
 // if we get to close, change up what we're doing (from orbit-planet.c_)
 void orbit_tooclose() {
-    if (orbit_distance >= DESIRED_DISTANCE)
+    if (orbit_distance >= DESIRED_DISTANCE) // use orbit_distance to focus on a specific kilobot
         orbit_state = ORBIT_NORMAL;
     else
         set_motion(FORWARD);
@@ -155,7 +158,7 @@ void find_current_location()
     {
         if(kilo_uid == kilo_leap_order[i]) // if we're in the kilo_leap_order (which we should be), find the location
         {
-            current_leap_location = i;
+            current_leap_location = i; // save the current index value
         }
     }
 }
@@ -168,25 +171,27 @@ void find_neighbors()
     // them, no matter what the current order is of the network
     if(current_leap_location == 0) // at the front of the line
     {
-        neighbor1_kilo_id = kilo_leap_order[current_leap_location+1];
-        neighbor1_cur_leap_location = current_leap_location + 1;
+        neighbor1_kilo_id = kilo_leap_order[current_leap_location+1]; // kilobot directly to our right
+        neighbor2_kilo_id = kilo_leap_order[current_leap_location+2]; // kilobot two robots down to the right
 
-        neighbor2_kilo_id = kilo_leap_order[current_leap_location+2];
-        neighbor2_cur_leap_location = current_leap_location + 2;
+        neighbor1_cur_leap_location = current_leap_location + 1; // save the index
+        neighbor2_cur_leap_location = current_leap_location + 2; // save the index
     }
     else if (current_leap_location == 1) // one away from the front
     {
-        neighbor1_kilo_id = kilo_leap_order[current_leap_location+1];
-        neighbor1_cur_leap_location = current_leap_location + 1;
+        neighbor1_kilo_id = kilo_leap_order[current_leap_location+1]; // kilobot directly to our right
+        neighbor2_kilo_id = kilo_leap_order[current_leap_location-1]; // kilobot directly to our left
 
-        neighbor2_kilo_id = kilo_leap_order[current_leap_location-1];
+        // save the index
+        neighbor1_cur_leap_location = current_leap_location + 1;
         neighbor2_cur_leap_location = current_leap_location - 1;
     }
     else // anywhere else, we don't need to worry about roll over
     {
-        neighbor1_kilo_id = kilo_leap_order[current_leap_location-2];
-        neighbor2_kilo_id = kilo_leap_order[current_leap_location-1];
+        neighbor1_kilo_id = kilo_leap_order[current_leap_location-2]; // kilobot two robots down on the left
+        neighbor2_kilo_id = kilo_leap_order[current_leap_location-1]; // kilobot directly to our left
 
+        // save the index
         neighbor1_cur_leap_location = current_leap_location - 2;
         neighbor2_cur_leap_location = current_leap_location - 1;
     }
@@ -257,9 +262,9 @@ void find_kilo_color()
 float compute_SSS()
 {
     // Assuming B is the angle we are looking for
-    float a = (float) neighbor2_cur_dist;
-    float b = (float) neighbor1_cur_dist;
-    float c = (float) dist_for_SSS;
+    float a = (float) neighbor2_cur_dist; // distance from current robot to neighbor2
+    float b = (float) neighbor1_cur_dist; // distance from current robot to neighbor1
+    float c = (float) dist_for_SSS; // distance from neighbor1 to neighbor2
     return( acos( ((c*c) + (a*a) - (b*b)) / (2*a*c) ) );
 }
 
@@ -343,19 +348,19 @@ void loop() {
                 // if we are, and neighbor 1 is at the front, switch states
                 if((neighbor1_cur_leap_location-1) < 0)
                 {
-                    current_leap_state = LEAP_SHIFT;
-                    orbit_distance = neighbor1_cur_dist;
+                    current_leap_state = LEAP_SHIFT; // change leap state
+                    orbit_distance = neighbor1_cur_dist; // set the orbit distance to neighbor1's distance (used by orbit code)
                 }
                 // if we are, but neighbor 1 is not at the front, switch our neighbors and continue traveling up the line
                 else
                 {
-                    neighbor2_kilo_id = neighbor1_kilo_id;
-                    neighbor2_cur_leap_location = neighbor1_cur_leap_location;
-                    neighbor2_cur_dist = neighbor1_cur_dist;
+                    neighbor2_kilo_id = neighbor1_kilo_id; // set our new neighbor2 as the current neighbor1 by changing it's ID
+                    neighbor2_cur_leap_location = neighbor1_cur_leap_location; // set our new neighbor2 as the current neighbor1 by saving it's leap location
+                    neighbor2_cur_dist = neighbor1_cur_dist; // set the current distance from neighbor1 as the current distance from neighbor2 so that transition is seamless
 
-                    neighbor1_kilo_id = kilo_leap_order[neighbor1_cur_leap_location-1];
-                    neighbor1_cur_leap_location = neighbor1_cur_leap_location - 1;
-                    neighbor1_cur_dist = 100; // set it to max before we receive a message
+                    neighbor1_kilo_id = kilo_leap_order[neighbor1_cur_leap_location-1]; // set the new neighbor1 as the next kilobot in the sequence to the left
+                    neighbor1_cur_leap_location = neighbor1_cur_leap_location - 1; // get it's index value
+                    neighbor1_cur_dist = 100; // set it to max before we receive a message, so we don't trigger this conditional again
                 }
             }
         }
@@ -369,10 +374,10 @@ void loop() {
                 switch(orbit_state) 
                 {
                     case ORBIT_NORMAL:
-                        orbit_normal();
+                        orbit_normal(); // normal shimmy-ing
                         break;
                     case ORBIT_TOOCLOSE:
-                        orbit_tooclose();
+                        orbit_tooclose(); // try to get the kilobot away from the center of orbit
                         break;
                 }
                 break;
@@ -386,15 +391,20 @@ void loop() {
                 {
                     current_leap_state = LEAP_FRONT;
                 }
+                // if(neighbor2_cur_dist >= (neighbor1_cur_dist + dist_for_SSS+7))
+                // {
+                //     current_leap_state = LEAP_FRONT;
+                // }
+            
 
                 // Orbit state machine
                 switch(orbit_state) 
                 {
                     case ORBIT_NORMAL:
-                        orbit_normal();
+                        orbit_normal(); // normal shimmy-ing
                         break;
                     case ORBIT_TOOCLOSE:
-                        orbit_tooclose();
+                        orbit_tooclose(); // try to get the kilobot away from the center of orbit
                         break;
                 }
                 break;
@@ -423,10 +433,10 @@ void loop() {
                 // Switch orbit directions now that we're facing the opposite way
                 switch(current_direction)
                 {
-                    case CLOCKWISE:
+                    case CLOCKWISE: // if we are currently clockwise, change to counterclockwise
                         current_direction = COUNTER_CLOCKWISE;
                         break;
-                    case COUNTER_CLOCKWISE:
+                    case COUNTER_CLOCKWISE: // if we are counter clockwise, change to clockwise
                         current_direction = CLOCKWISE;
                         break;
                 }
@@ -471,13 +481,13 @@ void message_rx(message_t *m, distance_measurement_t *d) {
     if(cur_distance == 0) return; // skip below if the cur_distance is 0
 
     // map the distance to the correct node
-    if(rx_kilo_id == neighbor1_kilo_id)
+    if(rx_kilo_id == neighbor1_kilo_id) // check received UID
     {
-        neighbor1_cur_dist = cur_distance;
+        neighbor1_cur_dist = cur_distance; // save the current received distance
     }
     else if(rx_kilo_id == neighbor2_kilo_id)
     {
-        neighbor2_cur_dist = cur_distance;
+        neighbor2_cur_dist = cur_distance; // save the current received distance
         // distance from n1-n2
         dist_for_SSS = m->data[2]; // (ONLY MEANINGFUL WHEN AT THE END OF THE LINE)
     }
