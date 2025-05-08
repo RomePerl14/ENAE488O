@@ -79,7 +79,6 @@ uint8_t neighbor2_cur_leap_location; // neighbor 2 location in the leap order
 
 uint8_t dist_for_SSS; // neighbor1 -> neighbor2 distance for computing angle using SS triangle
 
-uint8_t focused_neighbor_dist = 0; // Current neighbor of focus
 uint8_t orbit_distance = 0; // current orbit distance
 
 uint8_t current_leap_count = 0; // indicates how many times we've leaped
