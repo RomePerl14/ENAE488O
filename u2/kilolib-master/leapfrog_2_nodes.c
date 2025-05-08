@@ -1,3 +1,17 @@
+/*
+    ENAE448O MULTI-ROBOT SWARMS
+    Milestone 2 project (U2)
+    Group 3
+    Romeo Perlstein, Benjamin Tebeest, Oluwatumininu Olanrewaju
+
+    code by:
+    Romeo, Ben
+
+    HOLY MOLEY Dr. Otte, I feel like I understand the kilobots on 
+    a fundemental level after writing code for them for TWO DAYS
+    STRAIGHT!! I understand them, and they understand me...
+*/
+
 #include "kilolib.h"
 
 // declare constants
