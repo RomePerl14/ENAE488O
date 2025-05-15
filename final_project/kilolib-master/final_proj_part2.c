@@ -5,7 +5,7 @@
     Romeo Perlstein, Benjamin Tebeest, Oluwatumininu Olanrewaju
 
     code by:
-    Romeo, Ben
+    Romeo
 
     Dr. Otte, I apologize for my poor performance as a student!
 */
@@ -13,13 +13,14 @@
 #include "kilolib.h"
 #include <math.h>
 
+// Enumerator to switch between our flashing states
 typedef enum
 {
     FLASHING,
     NOT_FLASHING,
 } flashing_state_t;
 
-// declare motion variable type (from orbit-planet.c.c)
+// Declare motion variable type (from orbit-planet.c.c)
 typedef enum {
     STOP,
     FORWARD,
@@ -27,27 +28,35 @@ typedef enum {
     RIGHT
 } motion_t;
 
+// Variable definitions
 distance_measurement_t dist; // distance measurement
 uint8_t rx_kilo_id; // received kilobot ID
 message_t msg; // message variable
-uint8_t cur_distance = 0;
-uint8_t new_message = 0;
+uint8_t cur_distance = 0; // current distance
+uint8_t new_message = 0; // indicate if we got a new message
 
-uint16_t local_network[16]; // currently, we're only able to operator with up to 16 neighbors due to memory? That must mean theres a more efficient way to do this lol
-uint16_t heartbeat_check[16];
-uint8_t num_neighbors = 0;
+//---- LOCAL NETWORK VARIABLES ----//
+// Array that contains are local network - each index contains a kilo_uid that we've received from a neighbor (index 0 = first neighbor found, index END = most recent new neighbor)
+uint16_t local_network[16]; // currently, we're only able to operator with up to 16 neighbors due to memory? We could also dynamically modify the size, but thats out of the scope for this I think
+// Array that contains the heartbeat value of each neighbor, in the same order as the local_network[] array (indicies are 1:1)
+uint16_t heartbeat_check[16]; // same deal as above size-wise, could dynamically allocate but its easier to do this
+uint8_t num_neighbors = 0; // Keep track of how many neighbors we've connected to 
 
-uint8_t IN_CONTACT_THRESHOLD = 4; // basically, wait roughly 3 seconds before checking
-uint32_t start_time;
+//---- TIMIING ----//
+uint8_t IN_CONTACT_THRESHOLD = 4; // basically, wait roughly 4 seconds before dropping an inactive neighbor
+uint32_t start_time; // start time to keep track of how long we've been waiting for a neighbors contact
+uint32_t motion_timer; // timer so we can move for a certain length of time at a certain interval without needing delay()
+uint32_t global_timer; // timer so that we can wait X seconds before starting motion 
+uint32_t flashing_timer; // timer so we can flash at a specific interval without needing to use delay()
 
-uint32_t flashing_timer;
-flashing_state_t flashing_state = FLASHING;
-uint8_t neighbors_network_size_map[16];
-uint8_t neighbors_network_size = 0;
+//---- FLASHING ----//
+flashing_state_t flashing_state = FLASHING; // flashing state variable (intitialize to FLASHING on start)
+// An array to store the number of neighbors connected to a neighbor, i.e. if we are node1 in contact with node2, we want to store how many neighbors node2 has (node2 tells us)
+uint8_t neighbors_network_size_map[16]; // indicies are mapped 1:1 with the local_network[] array, similar to above
+uint8_t neighbors_network_size = 0; // size of our received neighbors local network
 
+//-- MOTION --//
 motion_t cur_motion = STOP; // current motion state
-uint32_t motion_timer;
-uint32_t global_timer;
 
 // function to set new motion (from orbit-planet.c.c)
 void set_motion(motion_t new_motion) {
@@ -73,43 +82,50 @@ void set_motion(motion_t new_motion) {
     }
 }
 
+// Function to check the heartbeat values of each neighbor, and figure out if we should drop em (they're no longer in the network)
 void check_heartbeats()
 {
     // Check to see if we've lost contact with a kilobot
-    uint8_t counter = 0; // counter to keep track of our location
-    do // while our counter is less than the number of neighbors we know of
+    uint8_t counter = 0; // counter to keep track of our location in the local_network[] array
+    // while our counter is less than the number of neighbors we know of, check to see if any of our neighbors have exceeded the threshold value
+    // and if so, drop em from the array (and thus, our local network)
+    do 
     {
-        // This should remove all values in the heartbeat_check that are greater than our threshold value
+        // Check if the current neighbor's heartbeat has surpassed the threshold
         if(heartbeat_check[counter] >= IN_CONTACT_THRESHOLD) // if the current neighobrs heartbeat value is greater than the preset threshold, we've lost contact with it
         {
             // if the counter is currently at the very end of the local_network, just set our lost neighbor's values to 0
-            if(counter == (num_neighbors-1)) // case for where we're at the very end of the array
+            if(counter == (num_neighbors-1))
             {
                 // instead of squashing them, set them to 0
                 local_network[counter] = 0; 
                 heartbeat_check[counter] = 0;
-                neighbors_network_size_map[counter] = 0;
+                neighbors_network_size_map[counter] = 0; // reset the size of this neighbor as well
             }
-            else // if it's not at the very end, squash it's values with the neighbor to the right of it in the local_network array, effectively getting rid of it
+            // if it's not at the very end, squash it's values with the neighbor to the right of it in the local_network array, effectively getting rid of it
+            else 
             {
+                // For every element (starting at the current count), take the value and shift it to the left, squashing the values at the current count
                 for(uint8_t i=counter;i<num_neighbors;i+=1)
                 {
                     // This algorithm is not very efficient, since it will repeat n+1 times, where n is the number of kilobots we've lost contact with
                     local_network[counter] = local_network[counter+1]; // shift everything left, squash the current kilobot
                     heartbeat_check[counter] = heartbeat_check[counter+1]; // shift everything left, squash the current kilobot's heartbeat
-                    neighbors_network_size_map[counter] = neighbors_network_size_map[counter+1];
+                    neighbors_network_size_map[counter] = neighbors_network_size_map[counter+1]; // shift everything to the left, squash the current kilobots neighbor size
                 }
             }
-            counter = -1; // reset back to the beginning to check through the array ()
+            counter = -1; // reset back to the beginning to check through the array
             num_neighbors -= 1; // decrement the number of neighbors
         }
         counter += 1;
     }
-    while (counter < num_neighbors);
+    while (counter < num_neighbors); // ending condition
 }
 
+// figure out the current color we need given the number of neighbors we have
 void get_kilo_color()
 {
+    // switch condition
     switch(num_neighbors)
     {
         case 0:
@@ -139,64 +155,80 @@ void get_kilo_color()
             set_color(RGB(1,0,1)); // PURPLE
             break;
 
-        default: // any other case, I guess just turn off the LED
+        default: // any other case, I guess just turn off the LED lol
             set_color(RGB(0,0,0));
             break;
     }
 }
 
+// Check our current flashing state and decide what action we need to take depending on it
 void check_flashing_state()
 {
     switch(flashing_state)
     {
+        // If we're flashing
         case FLASHING:
-            if((kilo_ticks-flashing_timer) == 32) //&& (kilo_ticks-flashing_timer) < 64)
+            // If its been roughly 32 ticks since our last reset
+            if((kilo_ticks-flashing_timer) == 32)
             {
-                set_color(RGB(0,0,0));
+                set_color(RGB(0,0,0)); // set color to zero
             }
+            // if its been roughly 64 ticks since our last reset
             else if((kilo_ticks-flashing_timer) == 64)
             {
+                // Reset our flashing timer
                 flashing_timer = kilo_ticks;
+                // Figure out what color we should be at the current number of neighbors
                 get_kilo_color();
             }
             break;
+        // If we're not flashing, just get the color for our the current number of neighbors
         case NOT_FLASHING:
             get_kilo_color();
             break;
     }
 }
 
+// Check our current movement state and decide what action we need to take depending on it
 void check_movement_state()
 {
+    // Check the flashing state
     switch(flashing_state)
     {
+        // If we're flashing, we want to move, so lets check out movement timer
         case FLASHING:
+            // If it's roughly been 64 ticks since our last reset
             if((kilo_ticks-motion_timer) == 64)
             {
-                set_motion(STOP);
+                set_motion(STOP); // stop motion
             }
+            // if it's been rough;y 96 ticks since our last reset
             else if((kilo_ticks-motion_timer) == 96)
             {
-                if(num_neighbors != 0)
+                if(num_neighbors != 0) // if we're flashing, but it's not because we're alone
                 {
-                    set_motion(FORWARD);
+                    set_motion(FORWARD); // move forward
                 }   
-                motion_timer = kilo_ticks;
+                motion_timer = kilo_ticks; // reset our motion timer
             }
             break;
-        case NOT_FLASHING:
-            set_motion(STOP);
+        case NOT_FLASHING: // if we're not flashing
+            set_motion(STOP); // stop
     }
 }
 
+// Function to compare the number of neighbors that each of the nodes in our local network have
 void compare_cardinality()
 {
     // Now, check out status compared to our neighbors
-    uint8_t smallest_size = 17;
+    uint8_t smallest_size = 17; // default largest size (atm)
+    // Smallest size finder algorithm (from online)
     if(neighbors_network_size_map[0] != 0)
     {
+        // If the first element is not 0, then use it as the starting value
         smallest_size = neighbors_network_size_map[0];
     }
+    // keep comparing the sizes until we find the smallest
     for(uint8_t i=1;i<num_neighbors;i+=1)
     {
         if(neighbors_network_size_map[i] != 0)
@@ -208,22 +240,23 @@ void compare_cardinality()
         }
         
     }
-    // if(num_neighbors < smallest_size)
-    if(num_neighbors <= smallest_size)
+    // if(num_neighbors < smallest_size) // case for where the SMALLEST in the local network (NO TIES) flashes
+    if(num_neighbors <= smallest_size) // case for where the smallest in the local network flashes (INCLUDING TIES - i.e. if node1 and node2 both have 2 neighbors and they're the smallest, then they both flash)
     {
         switch(flashing_state)
         {
             case NOT_FLASHING:
-                flashing_state = FLASHING;
-                flashing_timer = kilo_ticks;
-                motion_timer = kilo_ticks;
+                flashing_state = FLASHING; // Set our flashing state to FLASHING
+                flashing_timer = kilo_ticks; // reset our flashing timer
+                motion_timer = kilo_ticks; // reset our motion timer
                 break;
-            case FLASHING:
+            case FLASHING: // If we're already flashing, do nothing
                 break;
         }
     }
     else
     {
+        // If the number of neighbors is NOT the smallest in the local network, don't flash
         flashing_state = NOT_FLASHING;
     }
 }
@@ -251,51 +284,63 @@ void setup()
     msg.data[7] = 0;
     msg.crc = message_crc(&msg);
     
+    // Set up all of our timers
     start_time = kilo_ticks;
     flashing_timer = kilo_ticks;
     motion_timer = kilo_ticks;
     global_timer = kilo_ticks;
 }
 
-// now loop
+// Loopenschnitzel (loop in german [not really])
 void loop() {
 
+    // check if we got a new message, and if we did, set the new message flag to 0 (so it feels important)
     if(new_message == 1)
     {
         new_message = 0;
     }
 
-    if((kilo_ticks-start_time) >= 32) // update our heartbeat every half-second (roughly)
+    if((kilo_ticks-start_time) >= 16) // update our heartbeat every half-second (roughly)
     {
+        // every half-second, increment our heartbeat value
         for(uint8_t i=0;i<num_neighbors;i+=1)
         {
             heartbeat_check[i] += 1;
         }
-        start_time = kilo_ticks;
+        start_time = kilo_ticks; // reset our timer
     }    
      
 
-    // regardless of if we got a message, check the heartbeats
+    // Regardless of whether we got a message, check our heartbeats
     check_heartbeats();
 
+    //---- UNCOMMENT TO FLASH   ----//
+    // compare the number of neighbors of each neighbor in the local network
     compare_cardinality();
 
+    // check our flashing state
     check_flashing_state();
+    //----                      ----//
 
+    //---- UNCOMMENT TO MOVE    ----//
     if((kilo_ticks-global_timer) > (32*3))
     {
         check_movement_state();
     }
-    
+
+    //---- UNCOMMENT IF NOT FLASHING ----//
     // get_kilo_color();
+    //----                           ----//
                                                                                                                                                                                                                
 }
 
+// transmit our messages
 message_t *message_tx() 
 {
     msg.type = NORMAL;
     // Transmit our kilo_uid
     msg.data[0] = (uint8_t) kilo_uid;
+    // Transmit the number of neighbors we have
     msg.data[1] = (uint8_t) num_neighbors;
     // Do this thing
     msg.crc = message_crc(&msg);
@@ -303,6 +348,7 @@ message_t *message_tx()
     return &msg;
 }
 
+// receive messages
 void message_rx(message_t *m, distance_measurement_t *d) {
     new_message = 1;
     
@@ -366,14 +412,16 @@ void message_rx(message_t *m, distance_measurement_t *d) {
             }
         }
 
+        // double check our number of neighbors aligns with the values in our local_network[] array
         uint8_t num_neighbors_check = 0;
         for(uint8_t i=0;i<16;i+=1)
         {
-            if(local_network[i] != 0)
+            if(local_network[i] != 0) // if we have a neighbor, note it
             {
-                num_neighbors_check+=1;
+                num_neighbors_check+=1; // iterate up
             }
         }
+        // If the check is not the same as the num_neighbors we just found above, pick the check
         if(num_neighbors != num_neighbors_check)
         {
             num_neighbors = num_neighbors_check;
