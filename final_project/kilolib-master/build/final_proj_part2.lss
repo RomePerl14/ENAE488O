@@ -1079,8 +1079,7 @@ void loop() {
      68c:	90 93 33 01 	sts	0x0133, r25	; 0x800133 <start_time+0x1>
      690:	a0 93 34 01 	sts	0x0134, r26	; 0x800134 <start_time+0x2>
      694:	b0 93 35 01 	sts	0x0135, r27	; 0x800135 <start_time+0x3>
-    }
-    
+    }    
      
 
     // regardless of if we got a message, check the heartbeats

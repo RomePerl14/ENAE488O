@@ -153,6 +153,8 @@ void setup()
     msg.crc = message_crc(&msg);
     
     start_time = kilo_ticks;
+    global_timer = kilo_ticks;
+    set_color(RGB(1,1,1));
 }
 
 // now loop
@@ -163,7 +165,7 @@ void loop() {
         new_message = 0;
     }
 
-    if((kilo_ticks-start_time) >= 8) // update our heartbeat every half-second (roughly)
+    if((kilo_ticks-start_time) >= 24) // update our heartbeat every half-second (roughly)
     {
         for(uint8_t i=0;i<num_neighbors;i+=1)
         {
@@ -197,49 +199,70 @@ void loop() {
         send_local_network_binary |= (local_network_binary[i] << i); // store in LSB format
     }
     neighbor_network_binaries[kilo_uid] = send_local_network_binary; // update and send my local network
-     
-    global_number = 0;
-    for(uint8_t neighborN=0;neighborN<num_neighbors;neighborN+=1) // go through each neighbor and check their local network
+
+    if((kilo_ticks-global_timer) >= (32*3))
     {
-        uint8_t neighbor_check = 0; // value to store OR'd bit in
-        for(uint8_t i=0;i<5;i+=1)
+        
+        
+        global_number = 0;
+        for(uint8_t neighborN=0;neighborN<5;neighborN+=1) // go through each neighbor and check their local network
         {
-            if(i != neighborN) // only do operations on every network other than the current one we're looking at
+            uint8_t neighbor_check = 0; // value to store OR'd bit in
+            for(uint8_t i=0;i<5;i+=1)
             {
-                neighbor_check |= neighbor_network_binaries[local_network[neighborN] - 1]; // OR all of the local networks together
+                if(i != neighborN) // only do operations on every network other than the current one we're looking at
+                {
+                    neighbor_check |= neighbor_network_binaries[i]; // OR all of the local networks together
+                }
+            }
+
+            // Now, check the value of the N bit in the binary number
+
+            // Extracting the 5th bit (0-based index)
+            uint8_t bit_position = neighborN;
+
+            // Create a mask with only the 5th bit set to 1
+            uint8_t mask = 1 << bit_position;
+
+            // Extract the bit using AND and right shift
+            unsigned int extracted_bit = (neighbor_check & mask) >> bit_position;
+
+            if(extracted_bit == 1)
+            {
+                global_number += 1;
             }
         }
-
-        // Now, check the value of the N bit in the binary number
-
-        // Extracting the 5th bit (0-based index)
-        uint8_t bit_position = neighborN;
-
-        // Create a mask with only the 5th bit set to 1
-        uint8_t mask = 1 << bit_position;
-
-        // Extract the bit using AND and right shift
-        unsigned int extracted_bit = (neighbor_check & mask) >> bit_position;
-
-        if(extracted_bit == 1)
+        // Finally, condition our global number:
+        if(global_number != 0)
         {
-            global_number += 1;
+            global_number -= 1; // subtract 1
         }
-    }
-    // Finally, condition our global number:
-    if(global_number != 0)
-    {
-        global_number -= 1; // subtract 1
-    }
 
-    // check if we have no neighbors, and if so, we're at 0
-    if(num_neighbors == 0)
-    {
-        global_number = 0;
-    }
+        // check if we have no neighbors, and if so, we're at 0
+        if(num_neighbors == 0)
+        {
+            global_number = 0;
+        }
 
-    // get the color
-    get_kilo_color();
+        // get the color
+        get_kilo_color();
+
+        // fill our arrays with zero
+        for(uint8_t i=0;i<16;i+=1)
+        {
+            local_network[i] = 0;
+            heartbeat_check[i] = 0;
+        }
+        for(uint8_t i=0;i<5;i+=1)
+        {
+            neighbor_network_binaries[i] = 0;
+        }
+        for(uint8_t i=0;i<8;i+=1)
+        {
+            local_network_binary[i] = 0;
+        }
+        global_timer = kilo_ticks;
+    }
                                                                                                                                                                                                                
 }
 
