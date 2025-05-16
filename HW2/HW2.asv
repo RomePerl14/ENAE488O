@@ -1,0 +1,351 @@
+%% Romeo Perlstein HW2
+% Help! I need somebody
+close all
+clear
+
+%% Q1
+% given the following grpah:
+G = [2 0 0 0 0;
+     0 2 0 0 0;
+     0 0 2 0 0;
+     0 0 0 2 0;
+     0 0 0 0 2];
+A = [0 1 0 0 1;
+     1 0 1 0 0;
+     0 1 0 1 0;
+     0 0 1 0 1;
+     1 0 0 1 0];
+
+L = G - A;
+
+% Given
+x0_vec = [-4, -5;
+          -2,  2;
+           1,  6;
+           7,  0;
+           5, -6];
+
+k_vec_relative = [0, -1;
+                  0,  1;
+                  1,  0;
+                  0,  0;
+                 -1, -1];
+
+% k_vec_relative = [-0.5,0;
+%                    0,0;
+%                    0,0;
+%                    0,0;
+%                    0,0];
+
+% k = x0_vec + k_vec_relative
+k = k_vec_relative
+
+v0_vec = zeros(5,2);
+
+psi0_vec = x0_vec - k;
+
+z0_vec = [x0_vec; v0_vec; psi0_vec];
+z0_vec_1d = z0_vec(:);
+
+k_gain = 0.1;
+gamma_gain = 1;
+
+tall_er_ant = (10^-13); % Tolerance
+step_size = 0.02; % step size 
+max_time = 5; % max time (0->max_time)
+t = [0:step_size:max_time]; % timestep
+
+% ODE options
+ODE_options = odeset("RelTol", tall_er_ant, "AbsTol", tall_er_ant);
+
+[T,Z] = ode45(@myodefun, t, z0_vec_1d, ODE_options, A, k, k_gain, gamma_gain);
+
+z_state.x1 = [Z(:,1), Z(:,16)];
+z_state.x2 = [Z(:,2), Z(:,17)];
+z_state.x3 = [Z(:,3), Z(:,18)];
+z_state.x4 = [Z(:,4), Z(:,19)];
+z_state.x5 = [Z(:,5), Z(:,20)];
+
+z_state.v1 = [Z(:,6), Z(:,21)];
+z_state.v2 = [Z(:,7), Z(:,22)];
+z_state.v3 = [Z(:,8), Z(:,23)];
+z_state.v4 = [Z(:,9), Z(:,24)];
+z_state.v5 = [Z(:,10), Z(:,25)];
+
+z_state.psi1 = [Z(:,11), Z(:,26)];
+z_state.psi2 = [Z(:,12), Z(:,27)];
+z_state.psi3 = [Z(:,13), Z(:,28)];
+z_state.psi4 = [Z(:,14), Z(:,29)];
+z_state.psi5 = [Z(:,15), Z(:,30)];
+% 
+% % Position
+% figure;
+% hold on
+% plot(t, z_state.x1)
+% yline(k(1,1), "b-.")
+% yline(k(1,2), "r-.")
+% legend(["x", "y", "x_{desired}", "y_{desired}"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 1 Position State Over Time")
+% grid on
+% ylim([-6.5, -2])
+% 
+% figure;
+% hold on
+% plot(t, z_state.x2)
+% yline(k(2,1), "b-.")
+% yline(k(2,2), "r-.")
+% legend(["x", "y", "x_{desired}", "y_{desired}"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 2 Position State Over Time")
+% grid on
+% ylim([-3, 4])
+% 
+% figure;
+% hold on
+% plot(t, z_state.x3)
+% yline(k(3,1), "b-.")
+% yline(k(3,2), "r-.")
+% legend(["x", "y", "x_{desired}", "y_{desired}"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 3 Position State Over Time")
+% grid on
+% 
+% figure;
+% hold on
+% plot(t, z_state.x4)
+% yline(k(4,1), "b-.")
+% yline(k(4,2), "r-.")
+% legend(["x", "y", "x_{desired}", "y_{desired}"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 4 Position State Over Time")
+% grid on
+% ylim([-1, 8])
+% 
+% figure;
+% hold on
+% plot(t, z_state.x5)
+% yline(k(5,1), "b-.")
+% yline(k(5,2), "r-.")
+% legend(["x", "y", "x_{desired}", "y_{desired}"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 5 Position State Over Time")
+% grid on
+% 
+% 
+% % Velocity
+% figure;
+% hold on
+% plot(t, z_state.v1)
+% legend(["v_x", "v_y"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 1 Velocity State Over Time")
+% grid on
+% 
+% figure;
+% hold on
+% plot(t, z_state.v2)
+% legend(["v_x", "v_y"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 2 Velocity State Over Time")
+% grid on
+% 
+% figure;
+% hold on
+% plot(t, z_state.v3)
+% legend(["v_x", "v_y"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 3 Velocity State Over Time")
+% grid on
+% 
+% figure;
+% hold on
+% plot(t, z_state.v4)
+% legend(["v_x", "v_y"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 4 Velocity State Over Time")
+% grid on
+% 
+% figure;
+% hold on
+% plot(t, z_state.v5)
+% legend(["v_x", "v_y"])
+% xlabel("time (s)")
+% ylabel("state")
+% title("Plot of Node 5 Velocity State Over Time")
+% grid on
+
+
+
+figure;
+title("Plot of \psi Over Time")
+xlabel("X")
+ylabel("Y")
+hold on
+grid on
+yline(0, "-.");
+xline(0, "-.");
+for i = 1:length(T)
+    plot(z_state.psi1(1:i,1), z_state.psi1(1:i,2), "blue", LineWidth=1.5)
+    plot(z_state.psi2(1:i,1), z_state.psi2(1:i,2), "red", LineWidth=1.5)
+    plot(z_state.psi3(1:i,1), z_state.psi3(1:i,2), "green", LineWidth=1.5)
+    plot(z_state.psi4(1:i,1), z_state.psi4(1:i,2), "magenta", LineWidth=1.5)
+    plot(z_state.psi5(1:i,1), z_state.psi5(1:i,2), "black", LineWidth=1.5)
+
+    drawnow
+end
+scatter(z_state.psi1(end,1), z_state.psi1(end,2), "blue")
+scatter(z_state.psi2(end,1), z_state.psi2(end,2), "red")
+scatter(z_state.psi3(end,1), z_state.psi3(end,2), "green")
+scatter(z_state.psi4(end,1), z_state.psi4(end,2), "magenta")
+scatter(z_state.psi5(end,1), z_state.psi5(end,2), "black")
+legend(["x_0", "y_0", "V_1", "V_2", "V_3", "V_4", "V_5"])
+
+
+
+figure;
+hold on;
+grid on;
+title("Plot of X State (Top-down View")
+xlabel("X")
+ylabel("Y")
+axis equal
+xlim([-5,8])
+ylim([-8,8])
+scatter(x0_vec(1,1), x0_vec(1,2),30,"b","filled")
+scatter(x0_vec(2,1), x0_vec(2,2),30,"r","filled")
+scatter(x0_vec(3,1), x0_vec(3,2),30,"green","filled")
+scatter(x0_vec(4,1), x0_vec(4,2),30,"m","filled")
+scatter(x0_vec(5,1), x0_vec(5,2),30,"black","filled")
+% plot([x0_vec(1,1),x0_vec(2,1)], [x0_vec(1,2),x0_vec(2,2)],"b-.")
+% plot([x0_vec(2,1),x0_vec(3,1)], [x0_vec(2,2),x0_vec(3,2)],"b-.")
+% plot([x0_vec(3,1),x0_vec(4,1)], [x0_vec(3,2),x0_vec(4,2)],"b-.")
+% plot([x0_vec(4,1),x0_vec(5,1)], [x0_vec(4,2),x0_vec(5,2)],"b-.")
+% plot([x0_vec(1,1),x0_vec(5,1)], [x0_vec(1,2),x0_vec(5,2)],"b-.")
+
+scatter(k(1,1), k(1,2),30,"b","filled")
+scatter(k(2,1), k(2,2),30,"red","filled")
+scatter(k(3,1), k(3,2),30,"green","filled")
+scatter(k(4,1), k(4,2),30,"magenta","filled")
+scatter(k(5,1), k(5,2),30,"black","filled")
+% plot([k(1,1),k(2,1)], [k(1,2),k(2,2)],"r-.")
+% plot([k(2,1),k(3,1)], [k(2,2),k(3,2)],"r-.")
+% plot([k(3,1),k(4,1)], [k(3,2),k(4,2)],"r-.")
+% plot([k(4,1),k(5,1)], [k(4,2),k(5,2)],"r-.")
+% plot([k(1,1),k(5,1)], [k(1,2),k(5,2)],"r-.")
+
+for i = 1:length(T)
+    plot(z_state.x1(1:i,1), z_state.x1(1:i,2), "b");
+    plot(z_state.x2(1:i,1), z_state.x2(1:i,2), "red");
+    plot(z_state.x3(1:i,1), z_state.x3(1:i,2), "green");
+    plot(z_state.x4(1:i,1), z_state.x4(1:i,2), "magenta");
+    plot(z_state.x5(1:i,1), z_state.x5(1:i,2), "black");
+    % pause(0.1)
+    axis equal
+    xlim([-5,8])
+    ylim([-8,8])
+    drawnow
+end
+scatter(z_state.x1(end,1), z_state.x1(end,2),30,"b");
+scatter(z_state.x2(end,1), z_state.x2(end,2),30,"red");
+scatter(z_state.x3(end,1), z_state.x3(end,2),30,"green");
+scatter(z_state.x4(end,1), z_state.x4(end,2),30,"magenta");
+scatter(z_state.x5(end,1), z_state.x5(end,2),30,"black");
+% plot([z_state.x1(end,1), z_state.x2(end,1)], [z_state.x1(end,2),z_state.x2(end,2)],"g-.");
+% plot([z_state.x2(end,1), z_state.x3(end,1)], [z_state.x2(end,2),z_state.x3(end,2)],"g-.");
+% plot([z_state.x3(end,1), z_state.x4(end,1)], [z_state.x3(end,2),z_state.x4(end,2)],"g-.");
+% plot([z_state.x4(end,1), z_state.x5(end,1)], [z_state.x4(end,2),z_state.x5(end,2)],"g-.");
+% plot([z_state.x5(end,1), z_state.x1(end,1)], [z_state.x5(end,2),z_state.x1(end,2)],"g-.");
+
+function z_dot = myodefun(t, z, A, k, k_gain, gamma_gain)
+    % % Second try to fix Y issues
+    % z_dot = zeros(length(z),1);
+    % for i=1:5
+    %     xi = z(i);
+    %     yi = z(i+15);
+    %     ki_x = k(i,1);
+    %     ki_y = k(i,2);
+    % 
+    %     neighbors = find(A(i,:));
+    % 
+    %     for j = neighbors
+    %         xj = z(j);
+    %         yj = z(j+15);
+    %         kj_x = k(j,1);
+    %         kj_y = k(j,2);
+    % 
+    %         % Computation
+    %         z_dot(i) = z_dot(i) - ((xi-xj) - (ki_x-kj_x));
+    %         z_dot(i+15) = z_dot(i+15) - ((yi-yj) - (ki_y-kj_y));
+    % 
+    %         z_dot(i+10) = z_dot(i+10) - ((xi-ki_x) - (xj-kj_x));
+    %         z_dot(i+25) = z_dot(i+25) - ((yi-ki_y) - (yj-kj_y));
+    %     end
+    % end
+    
+    x = [z(1:5), z(16:20)];
+    v = [z(6:10,:), z(21:25)];
+    % psi = z(:,11:15);
+
+    formation_x_dot = zeros(5,2);
+
+    x_dot = zeros(5, 2);
+    v_dot = zeros(5, 2);
+    v_dot_part1 = zeros(5, 2);
+    v_dot_part2 = zeros(5, 2);
+    v_dot_part3 = zeros(5, 2);
+    psi_dot = zeros(5,2);
+    for i = 1:5
+        % 2 element vectors
+        xi = x(i,:);
+        ki = k(i,:);
+        vi = v(i,:);
+
+        neighbors = find(A(i,:));
+        % Summation portion
+        for j = neighbors
+            % 2 element vectors
+            xj = x(j, :);
+            vj = v(j, :);
+            kj = k(j, :);
+
+            aij = A(i,j);
+
+            % First, do formation control
+            formation_x_dot(i,:) = formation_x_dot(i,:) - ((xi-xj)-(ki-kj)); % negative because summation is negative
+            % x_dot(i,:) = v(i,:);
+
+            % find v_dot
+            % v_dot_part1(i,:) = v_dot_part1(i,:) + aij*(xj - xi);
+            % v_dot_part2(i,:) = v_dot_part2(i,:) + aij*(vj - vi);
+            % v_dot_part3(i,:) = v_dot_part3(i,:) + (xi-ki-xj+kj);
+
+            % pause(1)
+        end
+
+        % Correct all of our sums here
+        x_dot(i,:) = formation_x_dot;
+
+        psi_dot(i,:) = x_dot(i,:);
+    end
+
+    z_dot(1:5) = x_dot(:,1);
+    z_dot(6:10) = v_dot(:,1);
+    z_dot(11:15) = psi_dot(:,1);
+
+    z_dot(16:20) = x_dot(:,2);
+    z_dot(21:25) = v_dot(:,2);
+    z_dot(26:30) = psi_dot(:,2);
+
+    z_dot = transpose(z_dot);
+
+end

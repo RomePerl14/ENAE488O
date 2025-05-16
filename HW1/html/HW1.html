@@ -1,0 +1,748 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      -->
+<title>HW1</title>
+<meta name="generator" content="MATLAB 24.2">
+<link rel="schema.DC" href="http://purl.org/dc/elements/1.1/">
+<meta name="DC.date" content="2025-05-15">
+<meta name="DC.source" content="HW1.m">
+<style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style>
+</head>
+<body>
+<div class="content">
+<h2>Contents</h2>
+<div>
+<ul>
+<li>
+<a href="#2">Q1</a>
+</li>
+<li>
+<a href="#3">1</a>
+</li>
+<li>
+<a href="#4">2</a>
+</li>
+<li>
+<a href="#5">3</a>
+</li>
+<li>
+<a href="#6">4</a>
+</li>
+<li>
+<a href="#7">5)</a>
+</li>
+<li>
+<a href="#8">6</a>
+</li>
+</ul>
+</div>
+<pre class="codeinput">
+<span class="comment">%   ENAE4880        %</span>
+<span class="comment">% Romeo Perlstein   %</span>
+<span class="comment">%      HW1          %</span>
+<span class="comment">% I thought the only lonely place, was on the moon!</span>
+clear; clc; close <span class="string">all</span>
+</pre>
+<h2 id="2">Q1</h2>
+<pre class="codeinput">fprintf(<span class="string">"Q1)\n\n"</span>)
+fprintf(<span class="string">"1)\n"</span>)
+</pre>
+<h2 id="3">1</h2>
+<p>Given the graph in fig 1., we can find the degree matrix as the following:</p>
+<pre class="codeinput">num_nodes = 5;
+degree_mat = [
+    2 0 0 0 0;
+    0 2 0 0 0;
+    0 0 2 0 0;
+    0 0 0 2 0;
+    0 0 0 0 2];
+fprintf(<span class="string">"Degree Matrix:\n"</span>)
+disp(degree_mat);
+
+adjacency_mat = [
+    0 1 0 0 1;
+    1 0 1 0 0;
+    0 1 0 1 0;
+    0 0 1 0 1;
+    1 0 0 1 0];
+fprintf(<span class="string">"Adjacency Matrix:\n"</span>)
+disp(adjacency_mat);
+
+lapacian_mat = degree_mat - adjacency_mat;
+fprintf(<span class="string">"Laplacian Matrix\n"</span>)
+disp(lapacian_mat);
+
+L_rank = rank(lapacian_mat);
+
+fprintf(<span class="string">"Network is "</span>)
+<span class="keyword">if</span>(L_rank == num_nodes - 1)
+    fprintf(<span class="string">"CONNECTED\n"</span>)
+<span class="keyword">else</span>
+    fprintf(<span class="string">"NOT CONNECTED\n"</span>)
+<span class="keyword">end</span>
+
+
+[r_eig_vec, eig_vals_mat, l_eig_vec] = eig(lapacian_mat);
+<span class="keyword">for</span> i=1:num_nodes
+    eig_vals(i) = eig_vals_mat(i,i);
+<span class="keyword">end</span>
+eig_vals = eig_vals';
+fprintf(<span class="string">"Eigenvalues of Laplacian Matrix:\n"</span>)
+disp(eig_vals);
+fprintf(<span class="string">"Right Eigenvectors:\n"</span>)
+disp(r_eig_vec)
+fprintf(<span class="string">"Left Eigenvectors:\n"</span>)
+disp(l_eig_vec)
+
+x0 = [-2; 4; -1; 7; 5];
+fprintf(<span class="string">"Initial Starting States:\n"</span>)
+disp(x0);
+</pre>
+<h2 id="4">2</h2>
+<pre class="codeinput">fprintf(<span class="string">"2)\n"</span>)
+c = 0;
+<span class="keyword">for</span> i=1:num_nodes
+    c = c + (l_eig_vec(i,1)*x0(i));
+<span class="keyword">end</span>
+fprintf(<span class="string">"Agreement Value From Lecture:\n"</span>)
+disp(c)
+
+tau(:) = 1/eig_vals(2);
+fprintf(<span class="string">"Speed of Convergence From Lecture:\n"</span>)
+disp(tau);
+
+<span class="comment">% ODE SETUP</span>
+tall_er_ant = (10^-13); <span class="comment">% Tolerance</span>
+step_size = 0.01; <span class="comment">% step size</span>
+max_time = 10; <span class="comment">% max time (0-&gt;max_time)</span>
+t = [0:step_size:max_time]; <span class="comment">% timestep</span>
+
+<span class="comment">% ODE options</span>
+ODE_options = odeset(<span class="string">"RelTol"</span>, tall_er_ant, <span class="string">"AbsTol"</span>, tall_er_ant);
+
+[T,X] = ode45(@myodefun, t, x0, ODE_options, lapacian_mat);
+
+rounded_X = round(X, 3);
+<span class="keyword">for</span> i=1:length(t)
+    <span class="keyword">if</span>((rounded_X(i,1) == rounded_X(i,2)) &amp;&amp; (rounded_X(i,2) == rounded_X(i,3)) &amp;&amp; (rounded_X(i,3) == rounded_X(i,4)) &amp;&amp; (rounded_X(i,4) == rounded_X(i,5)))
+        agreement_val = round(X(i,1), 3);
+        agreement_time = T(i);
+        <span class="keyword">break</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+fprintf(<span class="string">"Agreement Value (From Integration of Agreement Protocol - rounded to 3 decimal places):\n"</span>)
+disp(agreement_val)
+fprintf(<span class="string">"Agreement Time (From Integration of Agreement Protocol):\n"</span>)
+disp(agreement_time)
+</pre>
+<h2 id="5">3</h2>
+<pre class="codeinput">fprintf(<span class="string">"3)\n"</span>)
+plot(T,X)
+title(<span class="string">"Q1-3) Plot of Each Node's State Over Time"</span>)
+xlabel(<span class="string">"Time (seconds)"</span>)
+ylabel(<span class="string">"Position"</span>)
+legend([<span class="string">"x_1"</span>, <span class="string">"x_2"</span>, <span class="string">"x_3"</span>, <span class="string">"x_4"</span>, <span class="string">"x_5"</span>]);
+grid <span class="string">on</span>
+
+<span class="keyword">for</span> i=1:num_nodes
+    figure
+    plot(T,X(:,i))
+    title([<span class="string">"Q1-3) Plot of x_"</span> + int2str(i) + <span class="string">" State Over Time"</span>])
+    xlabel(<span class="string">"Time (seconds)"</span>)
+    ylabel(<span class="string">"Position"</span>)
+    grid <span class="string">on</span>
+<span class="keyword">end</span>
+</pre>
+<h2 id="6">4</h2>
+<pre class="codeinput">fprintf(<span class="string">"4)\n"</span>)
+Id = eye(2);
+LxId = kron(lapacian_mat, Id);
+fprintf(<span class="string">"Kronecker Product of L and $I_D:\n"</span>)
+disp(LxId)
+
+<span class="comment">% ODE SETUP</span>
+tall_er_ant = (10^-13); <span class="comment">% Tolerance</span>
+step_size = 0.025; <span class="comment">% step size</span>
+max_time = 10; <span class="comment">% max time (0-&gt;max_time)</span>
+t = [0:step_size:max_time]; <span class="comment">% timestep</span>
+
+<span class="comment">% ODE options</span>
+ODE_options = odeset(<span class="string">"RelTol"</span>, tall_er_ant, <span class="string">"AbsTol"</span>, tall_er_ant);
+</pre>
+<h2 id="7">5)</h2>
+<pre class="codeinput">fprintf(<span class="string">"5)\n"</span>)
+x0 = [-4;
+      -2;
+       1;
+       7;
+       5;
+
+      -5;
+       2;
+       6;
+       0;
+      -6];
+[T,X] = ode45(@myodefunR2, t, x0, ODE_options, LxId);
+
+<span class="comment">% Find time to consensus</span>
+agreement_val = [0,0];
+agreement_time = 0;
+<span class="keyword">for</span> i=1:length(t)
+    <span class="keyword">if</span>(round(abs(X(i,2) - X(i,4)), 4) &lt;= 1e-4)
+        agreement_val = [X(i,2), X(i,5+2)];
+        agreement_time = T(i);
+        <span class="keyword">break</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+fprintf(<span class="string">"Agreement Value for x_2 and x_4 (From Integration of Agreement Protocol - rounded to 3 decimal places):\n"</span>)
+disp(agreement_val)
+fprintf(<span class="string">"Agreement Time for x_2 and x_4 (From Integration of Agreement Protocol):\n"</span>)
+disp(agreement_time)
+agreement_val = [0,0];
+agreement_time = 0;
+<span class="keyword">for</span> i=1:length(t)
+    <span class="keyword">if</span>(round(abs(X(i,3) - X(i,5)), 4) &lt;= 1e-4)
+        agreement_val = [X(i,3), X(i,5+3)];
+        agreement_time = T(i);
+        <span class="keyword">break</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+fprintf(<span class="string">"Agreement Value for x_1, x_3, and x_5 (From Integration of Agreement Protocol - rounded to 3 decimal places):\n"</span>)
+disp(agreement_val)
+fprintf(<span class="string">"Agreement Time for x_1, x_3, and x_5 (From Integration of Agreement Protocol):\n"</span>)
+disp(agreement_time)
+</pre>
+<h2 id="8">6</h2>
+<pre class="codeinput">fprintf(<span class="string">"6)\n"</span>)
+figure
+plot(T,X)
+title(<span class="string">"Q1-6) Plot of Each Node's State Over Time"</span>)
+xlabel(<span class="string">"Time (seconds)"</span>)
+ylabel(<span class="string">"Position"</span>)
+legend([<span class="string">"x_1"</span>,<span class="string">"x_2"</span>,<span class="string">"x_3"</span>,<span class="string">"x_4"</span>,<span class="string">"x_5"</span>,<span class="string">"y_1"</span>,<span class="string">"y_2"</span>,<span class="string">"y_3"</span>,<span class="string">"y_4"</span>,<span class="string">"y_5"</span>]);
+grid <span class="string">on</span>
+
+figure
+plot(T,X(:,1:5))
+title(<span class="string">"Q1-6) Plot of Each Node's X State Over Time"</span>)
+xlabel(<span class="string">"Time (seconds)"</span>)
+ylabel(<span class="string">"Position"</span>)
+legend([<span class="string">"x_1"</span>,<span class="string">"x_2"</span>,<span class="string">"x_3"</span>,<span class="string">"x_4"</span>,<span class="string">"x_5"</span>]);
+grid <span class="string">on</span>
+
+figure
+plot(T,X(:,6:10))
+title(<span class="string">"Q1-6) Plot of Each Node's Y State Over Time"</span>)
+xlabel(<span class="string">"Time (seconds)"</span>)
+ylabel(<span class="string">"Position"</span>)
+legend([<span class="string">"y_1"</span>,<span class="string">"y_2"</span>,<span class="string">"y_3"</span>,<span class="string">"y_4"</span>,<span class="string">"y_5"</span>]);
+grid <span class="string">on</span>
+
+<span class="keyword">for</span> i=1:num_nodes
+    figure
+    hold <span class="string">on</span>
+    plot(T,X(:,i))
+    plot(T,X(:,5+i))
+    title([<span class="string">"Q1-6) Plot of x_"</span> + int2str(i) + <span class="string">" State Over Time"</span>])
+    xlabel(<span class="string">"Time (seconds)"</span>)
+    ylabel(<span class="string">"Position"</span>)
+    grid <span class="string">on</span>
+<span class="keyword">end</span>
+
+figure
+<span class="comment">% for i = 1:length(t)</span>
+<span class="comment">%     hold off</span>
+<span class="comment">%     scatter(X(i,1), X(i,6), "b")</span>
+<span class="comment">%     hold on</span>
+<span class="comment">%     scatter(X(i,2), X(i,7), "r")</span>
+<span class="comment">%     scatter(X(i,3), X(i,8), "g")</span>
+<span class="comment">%     scatter(X(i,4), X(i,9), "magenta")</span>
+<span class="comment">%     scatter(X(i,5), X(i,10), "black")</span>
+<span class="comment">%</span>
+<span class="comment">%     plot(X(1:i,1), X(1:i,6), "b")</span>
+<span class="comment">%     plot(X(1:i,2), X(1:i,7), "r")</span>
+<span class="comment">%     plot(X(1:i,3), X(1:i,8), "g")</span>
+<span class="comment">%     plot(X(1:i,4), X(1:i,9), "magenta")</span>
+<span class="comment">%     plot(X(1:i,5), X(1:i,10), "black")</span>
+<span class="comment">%     yline(0, "--black")</span>
+<span class="comment">%     xline(0, "--black")</span>
+<span class="comment">%     axis equal</span>
+<span class="comment">%     grid on</span>
+<span class="comment">%     title("Plot of Each Node's Position")</span>
+<span class="comment">%     xlabel("X coordinate")</span>
+<span class="comment">%     ylabel("Y coordinate")</span>
+<span class="comment">%     legend(["x_1","x_2","x_3","x_4","x_5"]);</span>
+<span class="comment">%</span>
+<span class="comment">%     drawnow</span>
+<span class="comment">% end</span>
+hold <span class="string">off</span>
+scatter(X(end,1), X(end,6), <span class="string">"b"</span>)
+hold <span class="string">on</span>
+scatter(X(end,2), X(end,7), <span class="string">"r"</span>)
+scatter(X(end,3), X(end,8), <span class="string">"g"</span>)
+scatter(X(end,4), X(end,9), <span class="string">"magenta"</span>)
+scatter(X(end,5), X(end,10), <span class="string">"black"</span>)
+
+plot(X(1:end,1), X(1:end,6), <span class="string">"b"</span>)
+plot(X(1:end,2), X(1:end,7), <span class="string">"r"</span>)
+plot(X(1:end,3), X(1:end,8), <span class="string">"g"</span>)
+plot(X(1:end,4), X(1:end,9), <span class="string">"magenta"</span>)
+plot(X(1:end,5), X(1:end,10), <span class="string">"black"</span>)
+yline(0, <span class="string">"--black"</span>)
+xline(0, <span class="string">"--black"</span>)
+axis <span class="string">equal</span>
+grid <span class="string">on</span>
+title(<span class="string">"Q1-6) Plot of Each Node's Position"</span>)
+xlabel(<span class="string">"X coordinate"</span>)
+ylabel(<span class="string">"Y coordinate"</span>)
+legend([<span class="string">"x_1"</span>,<span class="string">"x_2"</span>,<span class="string">"x_3"</span>,<span class="string">"x_4"</span>,<span class="string">"x_5"</span>]);
+
+
+<span class="keyword">function</span> x_dot = myodefun(t, x, L)
+    x_dot = -L*x;
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> x_dot = myodefunR2(t, x, LxId)
+    x_dot = -LxId*x;
+<span class="keyword">end</span>
+</pre>
+<pre class="codeoutput">Q1)
+
+1)
+Degree Matrix:
+     2     0     0     0     0
+     0     2     0     0     0
+     0     0     2     0     0
+     0     0     0     2     0
+     0     0     0     0     2
+
+Adjacency Matrix:
+     0     1     0     0     1
+     1     0     1     0     0
+     0     1     0     1     0
+     0     0     1     0     1
+     1     0     0     1     0
+
+Laplacian Matrix
+     2    -1     0     0    -1
+    -1     2    -1     0     0
+     0    -1     2    -1     0
+     0     0    -1     2    -1
+    -1     0     0    -1     2
+
+Network is CONNECTED
+Eigenvalues of Laplacian Matrix:
+   -0.0000
+    1.3820
+    1.3820
+    3.6180
+    3.6180
+
+Right Eigenvectors:
+    0.4472    0.6286   -0.0697    0.2031   -0.5990
+    0.4472    0.2605    0.5763   -0.5164    0.3652
+    0.4472   -0.4676    0.4259    0.6324    0.0081
+    0.4472   -0.5495   -0.3131   -0.5069   -0.3782
+    0.4472    0.1280   -0.6194    0.1878    0.6039
+
+Left Eigenvectors:
+    0.4472    0.6286   -0.0697    0.2031   -0.5990
+    0.4472    0.2605    0.5763   -0.5164    0.3652
+    0.4472   -0.4676    0.4259    0.6324    0.0081
+    0.4472   -0.5495   -0.3131   -0.5069   -0.3782
+    0.4472    0.1280   -0.6194    0.1878    0.6039
+
+Initial Starting States:
+    -2
+     4
+    -1
+     7
+     5
+
+2)
+Agreement Value From Lecture:
+    5.8138
+
+Speed of Convergence From Lecture:
+    0.7236
+
+Agreement Value (From Integration of Agreement Protocol - rounded to 3 decimal places):
+    2.6000
+
+Agreement Time (From Integration of Agreement Protocol):
+    6.2100
+
+3)
+4)
+Kronecker Product of L and $I_D:
+     2     0    -1     0     0     0     0     0    -1     0
+     0     2     0    -1     0     0     0     0     0    -1
+    -1     0     2     0    -1     0     0     0     0     0
+     0    -1     0     2     0    -1     0     0     0     0
+     0     0    -1     0     2     0    -1     0     0     0
+     0     0     0    -1     0     2     0    -1     0     0
+     0     0     0     0    -1     0     2     0    -1     0
+     0     0     0     0     0    -1     0     2     0    -1
+    -1     0     0     0     0     0    -1     0     2     0
+     0    -1     0     0     0     0     0    -1     0     2
+
+5)
+Agreement Value for x_2 and x_4 (From Integration of Agreement Protocol - rounded to 3 decimal places):
+   -0.0000    0.8001
+
+Agreement Time for x_2 and x_4 (From Integration of Agreement Protocol):
+    7.1750
+
+Agreement Value for x_1, x_3, and x_5 (From Integration of Agreement Protocol - rounded to 3 decimal places):
+    0.8000   -0.0000
+
+Agreement Time for x_1, x_3, and x_5 (From Integration of Agreement Protocol):
+    7.3500
+
+6)
+</pre>
+<img vspace="5" hspace="5" src="HW1_01.png" alt=""> <img vspace="5" hspace="5" src="HW1_02.png" alt=""> <img vspace="5" hspace="5" src="HW1_03.png" alt=""> <img vspace="5" hspace="5" src="HW1_04.png" alt=""> <img vspace="5" hspace="5" src="HW1_05.png" alt=""> <img vspace="5" hspace="5" src="HW1_06.png" alt=""> <img vspace="5" hspace="5" src="HW1_07.png" alt=""> <img vspace="5" hspace="5" src="HW1_08.png" alt=""> <img vspace="5" hspace="5" src="HW1_09.png" alt=""> <img vspace="5" hspace="5" src="HW1_10.png" alt=""> <img vspace="5" hspace="5" src="HW1_11.png" alt=""> <img vspace="5" hspace="5" src="HW1_12.png" alt=""> <img vspace="5" hspace="5" src="HW1_13.png" alt=""> <img vspace="5" hspace="5" src="HW1_14.png" alt=""> <img vspace="5" hspace="5" src="HW1_15.png" alt=""> <p class="footer">
+<br>
+<a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2024b</a>
+<br>
+</p>
+</div>
+<!--
+##### SOURCE BEGIN #####
+%   ENAE4880        %
+% Romeo Perlstein   %
+%      HW1          %
+% I thought the only lonely place, was on the moon!
+clear; clc; close all
+
+%% Q1
+fprintf("Q1)\n\n")
+fprintf("1)\n")
+%%% 1 
+% Given the graph in fig 1., we can find the degree matrix as the following:
+num_nodes = 5;
+degree_mat = [
+    2 0 0 0 0;
+    0 2 0 0 0;
+    0 0 2 0 0;
+    0 0 0 2 0;
+    0 0 0 0 2];
+fprintf("Degree Matrix:\n")
+disp(degree_mat);
+
+adjacency_mat = [
+    0 1 0 0 1;
+    1 0 1 0 0;
+    0 1 0 1 0;
+    0 0 1 0 1;
+    1 0 0 1 0];
+fprintf("Adjacency Matrix:\n")
+disp(adjacency_mat);
+
+lapacian_mat = degree_mat - adjacency_mat;
+fprintf("Laplacian Matrix\n")
+disp(lapacian_mat);
+
+L_rank = rank(lapacian_mat);
+
+fprintf("Network is ")
+if(L_rank == num_nodes - 1)
+    fprintf("CONNECTED\n")
+else
+    fprintf("NOT CONNECTED\n")
+end
+
+
+[r_eig_vec, eig_vals_mat, l_eig_vec] = eig(lapacian_mat);
+for i=1:num_nodes
+    eig_vals(i) = eig_vals_mat(i,i);
+end
+eig_vals = eig_vals';
+fprintf("Eigenvalues of Laplacian Matrix:\n")
+disp(eig_vals);
+fprintf("Right Eigenvectors:\n")
+disp(r_eig_vec)
+fprintf("Left Eigenvectors:\n")
+disp(l_eig_vec)
+
+x0 = [-2; 4; -1; 7; 5];
+fprintf("Initial Starting States:\n")
+disp(x0);
+
+%%% 2
+fprintf("2)\n")
+c = 0;
+for i=1:num_nodes
+    c = c + (l_eig_vec(i,1)*x0(i));
+end
+fprintf("Agreement Value From Lecture:\n")
+disp(c)
+
+tau(:) = 1/eig_vals(2);
+fprintf("Speed of Convergence From Lecture:\n")
+disp(tau);
+
+% ODE SETUP
+tall_er_ant = (10^-13); % Tolerance
+step_size = 0.01; % step size 
+max_time = 10; % max time (0->max_time)
+t = [0:step_size:max_time]; % timestep
+
+% ODE options
+ODE_options = odeset("RelTol", tall_er_ant, "AbsTol", tall_er_ant);
+
+[T,X] = ode45(@myodefun, t, x0, ODE_options, lapacian_mat);
+
+rounded_X = round(X, 3);
+for i=1:length(t)
+    if((rounded_X(i,1) == rounded_X(i,2)) && (rounded_X(i,2) == rounded_X(i,3)) && (rounded_X(i,3) == rounded_X(i,4)) && (rounded_X(i,4) == rounded_X(i,5)))
+        agreement_val = round(X(i,1), 3);
+        agreement_time = T(i);
+        break
+    end
+end
+fprintf("Agreement Value (From Integration of Agreement Protocol - rounded to 3 decimal places):\n")
+disp(agreement_val)
+fprintf("Agreement Time (From Integration of Agreement Protocol):\n")
+disp(agreement_time)
+
+%%% 3
+fprintf("3)\n")
+plot(T,X)
+title("Q1-3) Plot of Each Node's State Over Time")
+xlabel("Time (seconds)")
+ylabel("Position")
+legend(["x_1", "x_2", "x_3", "x_4", "x_5"]);
+grid on
+
+for i=1:num_nodes
+    figure
+    plot(T,X(:,i))
+    title(["Q1-3) Plot of x_" + int2str(i) + " State Over Time"])
+    xlabel("Time (seconds)")
+    ylabel("Position")
+    grid on
+end
+
+%%% 4
+fprintf("4)\n")
+Id = eye(2);
+LxId = kron(lapacian_mat, Id);
+fprintf("Kronecker Product of L and $I_D:\n")
+disp(LxId)
+
+% ODE SETUP
+tall_er_ant = (10^-13); % Tolerance
+step_size = 0.025; % step size 
+max_time = 10; % max time (0->max_time)
+t = [0:step_size:max_time]; % timestep
+
+% ODE options
+ODE_options = odeset("RelTol", tall_er_ant, "AbsTol", tall_er_ant);
+
+%%% 5)
+fprintf("5)\n")
+x0 = [-4;
+      -2;
+       1;
+       7;
+       5;
+
+      -5;
+       2;
+       6;
+       0;
+      -6];
+[T,X] = ode45(@myodefunR2, t, x0, ODE_options, LxId);
+
+% Find time to consensus
+agreement_val = [0,0];
+agreement_time = 0;
+for i=1:length(t)
+    if(round(abs(X(i,2) - X(i,4)), 4) <= 1e-4)
+        agreement_val = [X(i,2), X(i,5+2)];
+        agreement_time = T(i);
+        break
+    end
+end
+fprintf("Agreement Value for x_2 and x_4 (From Integration of Agreement Protocol - rounded to 3 decimal places):\n")
+disp(agreement_val)
+fprintf("Agreement Time for x_2 and x_4 (From Integration of Agreement Protocol):\n")
+disp(agreement_time)
+agreement_val = [0,0];
+agreement_time = 0;
+for i=1:length(t)
+    if(round(abs(X(i,3) - X(i,5)), 4) <= 1e-4)
+        agreement_val = [X(i,3), X(i,5+3)];
+        agreement_time = T(i);
+        break
+    end
+end
+fprintf("Agreement Value for x_1, x_3, and x_5 (From Integration of Agreement Protocol - rounded to 3 decimal places):\n")
+disp(agreement_val)
+fprintf("Agreement Time for x_1, x_3, and x_5 (From Integration of Agreement Protocol):\n")
+disp(agreement_time)
+
+%%% 6
+fprintf("6)\n")
+figure
+plot(T,X)
+title("Q1-6) Plot of Each Node's State Over Time")
+xlabel("Time (seconds)")
+ylabel("Position")
+legend(["x_1","x_2","x_3","x_4","x_5","y_1","y_2","y_3","y_4","y_5"]);
+grid on
+
+figure
+plot(T,X(:,1:5))
+title("Q1-6) Plot of Each Node's X State Over Time")
+xlabel("Time (seconds)")
+ylabel("Position")
+legend(["x_1","x_2","x_3","x_4","x_5"]);
+grid on
+
+figure
+plot(T,X(:,6:10))
+title("Q1-6) Plot of Each Node's Y State Over Time")
+xlabel("Time (seconds)")
+ylabel("Position")
+legend(["y_1","y_2","y_3","y_4","y_5"]);
+grid on
+
+for i=1:num_nodes
+    figure
+    hold on
+    plot(T,X(:,i))
+    plot(T,X(:,5+i))
+    title(["Q1-6) Plot of x_" + int2str(i) + " State Over Time"])
+    xlabel("Time (seconds)")
+    ylabel("Position")
+    grid on
+end
+
+figure
+% for i = 1:length(t)
+%     hold off
+%     scatter(X(i,1), X(i,6), "b")
+%     hold on
+%     scatter(X(i,2), X(i,7), "r")
+%     scatter(X(i,3), X(i,8), "g")
+%     scatter(X(i,4), X(i,9), "magenta")
+%     scatter(X(i,5), X(i,10), "black")
+% 
+%     plot(X(1:i,1), X(1:i,6), "b")
+%     plot(X(1:i,2), X(1:i,7), "r")
+%     plot(X(1:i,3), X(1:i,8), "g")
+%     plot(X(1:i,4), X(1:i,9), "magenta")
+%     plot(X(1:i,5), X(1:i,10), "black")
+%     yline(0, "REPLACE_WITH_DASH_DASHblack")
+%     xline(0, "REPLACE_WITH_DASH_DASHblack")
+%     axis equal
+%     grid on
+%     title("Plot of Each Node's Position")
+%     xlabel("X coordinate")
+%     ylabel("Y coordinate")
+%     legend(["x_1","x_2","x_3","x_4","x_5"]);
+% 
+%     drawnow
+% end
+hold off
+scatter(X(end,1), X(end,6), "b")
+hold on
+scatter(X(end,2), X(end,7), "r")
+scatter(X(end,3), X(end,8), "g")
+scatter(X(end,4), X(end,9), "magenta")
+scatter(X(end,5), X(end,10), "black")
+
+plot(X(1:end,1), X(1:end,6), "b")
+plot(X(1:end,2), X(1:end,7), "r")
+plot(X(1:end,3), X(1:end,8), "g")
+plot(X(1:end,4), X(1:end,9), "magenta")
+plot(X(1:end,5), X(1:end,10), "black")
+yline(0, "REPLACE_WITH_DASH_DASHblack")
+xline(0, "REPLACE_WITH_DASH_DASHblack")
+axis equal
+grid on
+title("Q1-6) Plot of Each Node's Position")
+xlabel("X coordinate")
+ylabel("Y coordinate")
+legend(["x_1","x_2","x_3","x_4","x_5"]);
+
+
+function x_dot = myodefun(t, x, L)
+    x_dot = -L*x;
+end
+
+function x_dot = myodefunR2(t, x, LxId)
+    x_dot = -LxId*x;
+end
+##### SOURCE END #####
+-->
+</body>
+</html>
